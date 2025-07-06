@@ -1,0 +1,10 @@
+FROM python:3.12
+
+COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
+
+COPY . /workspace/api
+
+WORKDIR /workspace/api
+RUN uv sync
+
+CMD [".venv/bin/fastapi", "dev", "--host", "0.0.0.0"]

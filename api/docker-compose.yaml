@@ -1,0 +1,36 @@
+services:
+  api:
+    container_name: api
+    build:
+      context: .
+      dockerfile: Dockerfile.api
+    depends_on:
+      - postgres
+    tty: true
+    ports:
+      - 8000:8000
+    volumes:
+      - ../:/workspace
+      - /workspace/api/.venv
+    environment:
+      PYTHONDONTWRITEBYTECODE: "1"
+      DB_USER: "postgres"
+      DB_HOST: "postgres"
+      DB_PORT: "5432"
+      DB_PASSWORD: "password"
+      DB_NAME: "postgres"
+      JWT_SECRET_KEY: "09d25e094faa6ca2556c818166b7a9563b93f7099f6f0f4caa6cf63b88e8d3e7"
+      JET_ALGORITHM: "HS256"
+      JWT_EXPIRE_MINUTES: 30
+
+  postgres:
+    container_name: postgres
+    build:
+      context: .
+      dockerfile: Dockerfile.database
+    ports:
+      - 5432:5432
+    environment:
+      TZ: Asia/Tokyo
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
