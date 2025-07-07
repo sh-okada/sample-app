@@ -28,7 +28,7 @@ class ArticleQueryService(IArticleQueryService):
             article.id,
             article.title,
             article.text,
-            query_models.User(article.user.id, article.user.username),
+            query_models.User(article.user.id, article.user.name),
         )
 
     def get_articles(
@@ -46,7 +46,7 @@ class ArticleQueryService(IArticleQueryService):
                 article.id,
                 article.title,
                 article.text,
-                query_models.User(article.user.id, article.user.username),
+                query_models.User(article.user.id, article.user.name),
             )
             for article in articles
         ]

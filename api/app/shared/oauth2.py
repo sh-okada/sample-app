@@ -23,7 +23,7 @@ def get_current_user(token: TokenDep, session: SessionDep):
         )
     return responses.User(
         id=str(user.id),
-        username=user.username,
+        name=user.name,
     )
 
 

@@ -19,7 +19,7 @@ def login(
     form_data: Annotated[OAuth2PasswordRequestForm, Depends()], session: SessionDep
 ):
     statement = select(db_models.User).where(
-        db_models.User.username == form_data.username,
+        db_models.User.name == form_data.username,
     )
     user = session.exec(statement).one_or_none()
 
@@ -37,7 +37,7 @@ def login(
 
     return responses.UserWithAccessToken(
         id=str(user.id),
-        username=user.username,
+        username=user.name,
         access_token=access_token,
     )
 
@@ -45,7 +45,7 @@ def login(
 @auth_router.post("/signup")
 def signUp(form_data: requests.SignUp, session: SessionDep):
     statement = select(db_models.User).where(
-        db_models.User.username == form_data.username,
+        db_models.User.name == form_data.username,
     )
     user = session.exec(statement).one_or_none()
     if user:
@@ -55,7 +55,7 @@ def signUp(form_data: requests.SignUp, session: SessionDep):
 
     user = db_models.User(
         id=uuid.uuid4(),
-        username=form_data.username,
+        name=form_data.username,
         password=password.get_password_hash(form_data.password.get_secret_value()),
     )
 
