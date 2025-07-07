@@ -2,13 +2,8 @@ import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import { login } from "@/api/auth";
 import { paths } from "@/config/paths";
+import { privateRoutes } from "@/config/routes";
 import { loginSchema } from "@/lib/zod/schema";
-
-const publicRoutes = [
-  paths.home.getHref(),
-  paths.login.getHref(),
-  paths.signup.getHref(),
-];
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [
@@ -62,7 +57,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       return session;
     },
     authorized: async ({ auth, request: { nextUrl } }) => {
-      if (!auth && publicRoutes.includes(nextUrl.pathname)) {
+      if (!auth && !privateRoutes.includes(nextUrl.pathname)) {
         return true;
       }
 

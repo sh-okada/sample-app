@@ -3,13 +3,13 @@ import { getPaginationProps } from "@/components/core/pagination/helper/getPagin
 import { Pagination } from "@/components/core/pagination/pagination";
 import { paths } from "@/config/paths";
 
-export type DocListPaginationProps = {
+export type ArticleListPaginationProps = {
   currentPage: number;
 };
 
 export const ArticleListPagination = async ({
   currentPage,
-}: DocListPaginationProps) => {
+}: ArticleListPaginationProps) => {
   const articleCount = (await getArticleCount()).data;
   const totalPages = Math.max(1, Math.ceil(articleCount.count / 5));
 
