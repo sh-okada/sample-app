@@ -1,12 +1,10 @@
 "use client";
 
-import { ClipBordButton } from "@/components/ui-parts/markdown/parts/clip-bord-button";
 import type { ComponentProps } from "react";
-import { FaClipboard } from "react-icons/fa6";
-import { FaClipboardCheck } from "react-icons/fa6";
-
+import { FaClipboard, FaClipboardCheck } from "react-icons/fa6";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { vscDarkPlus } from "react-syntax-highlighter/dist/esm/styles/prism";
+import { ClipBordButton } from "@/components/ui-parts/markdown-viewer/parts/clip-bord-button";
 
 export type MdCodeBlockProps = ComponentProps<"code"> & {
   inline?: boolean;

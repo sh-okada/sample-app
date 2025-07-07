@@ -1,6 +1,6 @@
 export const paths = {
   home: {
-    name: "記事一覧",
+    name: "記事を見る",
     getHref: (query?: { page?: string }) =>
       query ? `/?${new URLSearchParams(query).toString()}` : "/",
   },
@@ -14,7 +14,7 @@ export const paths = {
   },
   article: {
     id: {
-      name: "記事を見る",
+      name: "",
       getHref: (id: string) => `/article/${id}`,
     },
     post: {
