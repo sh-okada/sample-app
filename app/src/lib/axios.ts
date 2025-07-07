@@ -1,7 +1,7 @@
-import { auth, signOut } from "@/lib/auth";
 import axios from "axios";
 import camelcaseKeys from "camelcase-keys";
 import snakecaseKeys from "snakecase-keys";
+import { auth, signOut } from "@/lib/auth";
 
 export const axiosInstance = axios.create({
   baseURL: process.env.API_URL,
