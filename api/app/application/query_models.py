@@ -12,6 +12,7 @@ class Article:
     id: str
     title: str
     text: str
+    user: User
 
 
 @dataclass(frozen=True)

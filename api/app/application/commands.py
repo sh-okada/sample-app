@@ -2,12 +2,6 @@ from dataclasses import dataclass
 
 
 @dataclass
-class PostDoc:
-    title: str
-    text: str
-
-
-@dataclass
 class PostArticle:
     title: str
     text: str
@@ -15,7 +9,7 @@ class PostArticle:
 
 
 @dataclass(frozen=True)
-class GetArticles(frozen=True):
+class GetArticles:
     page: int
     limit: int
 

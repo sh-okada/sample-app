@@ -13,7 +13,7 @@ from app.shared.oauth2 import CurrentUserDep
 articles_router = APIRouter(prefix="/articles", tags=["articles"])
 
 
-@articles_router.get("/count", response_model=responses.Article)
+@articles_router.get("/count", response_model=responses.ArticleCount)
 def get_article_count(article_query_service: ArticleQueryServiceDep):
     return article_query_service.get_article_count()
 
@@ -37,14 +37,12 @@ def get_doc(id: str, article_query_service: ArticleQueryServiceDep):
 
 @articles_router.post("")
 def post_article(
-    post_article_request: requests.PostArticle,
+    form_data: requests.PostArticle,
     post_article_use_case: PostArticleUseCaseDep,
     current_user: CurrentUserDep,
 ):
     post_article_use_case.execute(
-        commands.PostArticle(
-            post_article_request.title, post_article_request.text, current_user.id
-        )
+        commands.PostArticle(form_data.title, form_data.text, current_user.id)
     )
 
     return Response(status_code=status.HTTP_201_CREATED)

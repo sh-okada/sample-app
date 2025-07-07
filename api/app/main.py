@@ -8,9 +8,6 @@ from pydantic import ValidationError
 from app.infrastructure.db.postgres import create_db_and_tables
 from app.interface.router.articles_router import articles_router
 from app.interface.router.auth_router import auth_router
-from app.interface.router.departments_router import departments_router
-from app.interface.router.docs_router import docs_router
-from app.interface.router.grades_router import grades_router
 from app.interface.router.users_router import users_router
 
 
@@ -26,9 +23,6 @@ api_router = APIRouter(prefix="/api")
 
 api_router.include_router(auth_router)
 api_router.include_router(users_router)
-api_router.include_router(departments_router)
-api_router.include_router(grades_router)
-api_router.include_router(docs_router)
 api_router.include_router(articles_router)
 
 app.include_router(api_router)

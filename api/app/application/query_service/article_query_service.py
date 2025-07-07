@@ -4,7 +4,7 @@ from typing import List
 from app.application import commands, query_models
 
 
-class IArticleQueryService(abc.Meta):
+class IArticleQueryService(abc.ABC):
     @abc.abstractmethod
     def get_article_count(self) -> query_models.ArticleCount:
         raise NotImplementedError()

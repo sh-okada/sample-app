@@ -24,7 +24,12 @@ class ArticleQueryService(IArticleQueryService):
     ) -> query_models.Article:
         article = self.__session.get_one(db_models.Article, get_article_command.id)
 
-        return query_models.Article(article.id, article.title, article.text)
+        return query_models.Article(
+            article.id,
+            article.title,
+            article.text,
+            query_models.User(article.user.id, article.user.username),
+        )
 
     def get_articles(
         self,
@@ -37,7 +42,12 @@ class ArticleQueryService(IArticleQueryService):
         articles = self.__session.exec(statement).all()
 
         return [
-            query_models.Article(article.id, article.title, article.text)
+            query_models.Article(
+                article.id,
+                article.title,
+                article.text,
+                query_models.User(article.user.id, article.user.username),
+            )
             for article in articles
         ]
 

@@ -18,7 +18,7 @@ class PostArticleUseCase:
 
     def execute(self, post_article_command: commands.PostArticle):
         article = Article(
-            id=ArticleId,
+            id=ArticleId(),
             title=ArticleTitle(post_article_command.title),
             text=ArticleText(post_article_command.text),
             user_id=UserId(uuid.UUID(post_article_command.user_id)),
