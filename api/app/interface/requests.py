@@ -1,6 +1,7 @@
 from typing import Annotated
 
-from fastapi import Query
+from fastapi import Depends, Query
+from fastapi.security import OAuth2PasswordRequestForm
 from pydantic import BaseModel, Field, SecretStr
 
 
@@ -23,4 +24,5 @@ class ArticleFilterParams(BaseModel):
     limit: int = Field(default=5, ge=5, le=100)
 
 
+OAuth2PasswordRequest = Annotated[OAuth2PasswordRequestForm, Depends()]
 ArticleFilterQuery = Annotated[ArticleFilterParams, Query()]

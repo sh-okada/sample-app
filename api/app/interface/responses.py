@@ -6,7 +6,7 @@ class User(BaseModel):
     name: str
 
 
-class UserWithAccessToken(User):
+class UserWithAccessToken(BaseModel):
     id: str
     username: str
     access_token: str
