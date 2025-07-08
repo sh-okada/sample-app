@@ -30,7 +30,7 @@ export const LoginForm = () => {
         <Field>
           <Field.Label htmlFor={fields.username.id}>ユーザー名</Field.Label>
           <Input
-            data-cy="username"
+            data-cy="username-input"
             {...getInputProps(fields.username, { type: "text" })}
             key={fields.username.key}
           />
@@ -39,13 +39,15 @@ export const LoginForm = () => {
         <Field>
           <Field.Label htmlFor={fields.password.id}>パスワード</Field.Label>
           <Input
-            data-cy="password"
+            data-cy="password-input"
             {...getInputProps(fields.password, { type: "password" })}
             key={fields.password.key}
           />
           <ErrorText>{fields.password.errors}</ErrorText>
         </Field>
-        <Button type="submit">ログイン</Button>
+        <Button data-cy="login-button" type="submit">
+          ログイン
+        </Button>
         <div className="text-right">
           <Link asChild>
             <InternalLink href={paths.signup.getHref()}>
