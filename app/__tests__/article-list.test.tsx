@@ -1,6 +1,6 @@
 import { act, render, screen } from "@testing-library/react";
 import { ArticleListContainer } from "@/app/(with-header)/_components/article-list-container";
-import { describeWithAxiosMock } from "@/lib/jest/describe";
+import { describeWithAxiosMock } from "@/lib/jest/util";
 
 describeWithAxiosMock("記事が1件以上ある場合", (getAxiosMock) => {
   beforeEach(async () => {
