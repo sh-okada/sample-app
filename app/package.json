@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "test": "jest"
+    "test": "jest",
+    "e2e:headless": "start-server-and-test dev http://localhost:3000 \"cypress run --e2e\""
   },
   "dependencies": {
     "@codemirror/lang-markdown": "^6.3.3",
@@ -42,8 +43,10 @@
     "@types/react-dom": "^19",
     "@types/react-syntax-highlighter": "^15.5.13",
     "axios-mock-adapter": "^2.1.0",
+    "cypress": "^14.5.1",
     "jest": "^30.0.4",
     "jest-environment-jsdom": "^30.0.4",
+    "start-server-and-test": "^2.0.12",
     "ts-node": "^10.9.2",
     "typescript": "^5"
   }

@@ -30,6 +30,7 @@ export const LoginForm = () => {
         <Field>
           <Field.Label htmlFor={fields.username.id}>ユーザー名</Field.Label>
           <Input
+            data-cy="username"
             {...getInputProps(fields.username, { type: "text" })}
             key={fields.username.key}
           />
@@ -38,6 +39,7 @@ export const LoginForm = () => {
         <Field>
           <Field.Label htmlFor={fields.password.id}>パスワード</Field.Label>
           <Input
+            data-cy="password"
             {...getInputProps(fields.password, { type: "password" })}
             key={fields.password.key}
           />
