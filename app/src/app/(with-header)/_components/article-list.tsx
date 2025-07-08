@@ -9,7 +9,7 @@ export type ArticleListProps = {
 
 export const ArticleList = ({ articles }: ArticleListProps) => {
   if (articles.length === 0) {
-    <p className="text-center">記事は投稿されていません</p>;
+    return <p className="text-center">記事は投稿されていません</p>;
   }
 
   return (

@@ -99,10 +99,11 @@ const config: Config = {
 
   // A map from regular expressions to module names or to arrays of module names that allow to stub out resources with a single module
   moduleNameMapper: {
-    "@/auth": "<rootDir>/__tests__/mock/auth.ts",
+    "@/auth": "<rootDir>/src/lib/jest/auth.ts",
     "next-auth/providers/credentials":
-      "<rootDir>/__tests__/mock/next-auth-providers-credentials.ts",
-    "next-auth": "<rootDir>/__tests__/mock/next-auth.ts",
+      "<rootDir>/src/lib/jest/next-auth-providers-credentials.ts",
+    "next-auth": "<rootDir>/src/lib/jest/next-auth.ts",
+    "next/navigation": "<rootDir>/src/lib/jest/navigation.ts",
   },
   // An array of regexp pattern strings, matched against all module paths before considered 'visible' to the module loader
   // modulePathIgnorePatterns: [],

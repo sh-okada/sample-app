@@ -1,6 +1,7 @@
 "use server";
 
 import { parseWithZod } from "@conform-to/zod";
+import { redirect } from "next/navigation";
 import { AuthError } from "next-auth";
 import { signIn } from "@/lib/auth";
 import { isBadRequestError } from "@/lib/axios";
@@ -16,10 +17,11 @@ export async function login(_prevState: unknown, formData: FormData) {
   }
 
   try {
-    await signIn("credentials", {
+    const callbackUrl = await signIn("credentials", {
       ...Object.fromEntries(formData),
-      redirect: true,
+      redirect: false,
     });
+    redirect(callbackUrl);
   } catch (error) {
     if (error instanceof AuthError && isBadRequestError(error.cause?.err)) {
       return submission.reply({
