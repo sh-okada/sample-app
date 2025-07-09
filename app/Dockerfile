@@ -1,21 +1,5 @@
 FROM node:lts
 
-
-RUN apt-get update && apt-get install -y \
-    libgtk2.0-0 \
-    libgtk-3-0 \
-    libgbm-dev \
-    libnotify-dev \
-    libnss3 \
-    libxss1 \
-    libasound2 \
-    libxtst6 \
-    xauth \
-    xvfb
-
-
-
-
 RUN npm install -g @biomejs/biome
 
 WORKDIR /workspace/app
@@ -23,6 +7,7 @@ WORKDIR /workspace/app
 COPY ./package.json ./
 
 RUN npm install
+RUN npx playwright install --with-deps
 
 COPY ./src ./src
 COPY ./public ./public
