@@ -44,7 +44,6 @@
     "get-port": "^7.1.0",
     "jest": "^30.0.4",
     "jest-environment-jsdom": "^30.0.4",
-    "msw": "^2.7.0",
     "ts-node": "^10.9.2",
     "typescript": "^5"
   },

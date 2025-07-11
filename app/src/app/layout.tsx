@@ -3,14 +3,6 @@ import "./globals.css";
 import { Noto_Sans_JP } from "next/font/google";
 import type { ReactNode } from "react";
 
-if (
-  process.env.NEXT_RUNTIME === "nodejs" &&
-  process.env.NODE_ENV === "development"
-) {
-  const { server } = await import("@/lib/msw/node");
-  server.listen();
-}
-
 const notoSans = Noto_Sans_JP({
   weight: ["400", "500", "700"],
   subsets: ["latin"],
