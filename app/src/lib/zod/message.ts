@@ -5,4 +5,5 @@ export const message = {
     `${label}は${min}文字以上で入力してください`,
   max: (label: string, max: number) =>
     `${label}は${max}文字以下で入力してください`,
+  regex: (message: string) => message,
 } as const;
