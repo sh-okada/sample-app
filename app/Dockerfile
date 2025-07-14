@@ -7,7 +7,6 @@ WORKDIR /workspace/app
 COPY ./package.json ./
 
 RUN npm install
-RUN npx playwright install --with-deps
 
 COPY ./src ./src
 COPY ./public ./public
