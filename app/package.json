@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
+    "dev:mock": "NEXT_PUBLIC_MSW_MOCK=enabled next dev --turbopack",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
@@ -34,7 +35,13 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "@types/react-syntax-highlighter": "^15.5.13",
+    "msw": "^2.10.4",
     "ts-node": "^10.9.2",
     "typescript": "^5"
+  },
+  "msw": {
+    "workerDirectory": [
+      "public"
+    ]
   }
 }
