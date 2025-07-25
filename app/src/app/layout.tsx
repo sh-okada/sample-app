@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { Noto_Sans_JP } from "next/font/google";
 import type { ReactNode } from "react";
-import { MswWorker } from "@/lib/msw/msw-worker";
 
 const notoSans = Noto_Sans_JP({
   weight: ["400", "500", "700"],
@@ -17,10 +16,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="ja" className={notoSans.className}>
-      <body>
-        <MswWorker />
-        {children}
-      </body>
+      <body>{children}</body>
     </html>
   );
 }
