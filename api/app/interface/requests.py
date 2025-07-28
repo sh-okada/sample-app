@@ -39,7 +39,7 @@ class PostArticle(BaseModel):
 
 
 class ArticleIdPathParam(BaseModel):
-    id: str = Field(..., min_length=1, max_length=100)
+    id: str = Field(..., min_length=2, max_length=100)
 
 
 class ArticleFilterParams(BaseModel):
