@@ -2,11 +2,11 @@ import os
 
 
 class DB:
-    USER: str = os.getenv("DB_USER", "")
-    PASSWORD: str = os.getenv("DB_PASSWORD", "")
-    HOST: str = os.getenv("DB_HOST", "")
-    PORT: str = os.getenv("DB_PORT", "")
-    NAME: str = os.getenv("DB_NAME", "")
+    USER: str = os.getenv("DB_USER", "postgres")
+    PASSWORD: str = os.getenv("DB_PASSWORD", "password")
+    HOST: str = os.getenv("DB_HOST", "localhost")
+    PORT: int = int(os.getenv("DB_PORT", 5432))
+    NAME: str = os.getenv("DB_NAME", "postgres")
 
 
 class JWT:
