@@ -11,6 +11,11 @@ export const ArticleListPagination = async ({
   currentPage,
 }: ArticleListPaginationProps) => {
   const articleCount = (await getArticleCount()).data;
+
+  if (articleCount.count === 0) {
+    return null;
+  }
+
   const totalPages = Math.max(1, Math.ceil(articleCount.count / 5));
 
   return (

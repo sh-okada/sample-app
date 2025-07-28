@@ -10,6 +10,8 @@ services:
     volumes:
       - ../:/workspace
       - /workspace/app/node_modules
+      - /workspace/app/.next
+      - /workspace/app/.swc
     environment:
       AUTH_SECRET: "cEPKRUHbWS2ylvvhPc+Mdbr1pPAmt1Ky0qxJVGdhXp0="
       API_URL: "http://localhost:8000/api"

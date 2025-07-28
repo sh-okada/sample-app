@@ -50,7 +50,7 @@ def signUp(form_data: requests.SignUp, session: SessionDep):
         )
 
     user = db_models.User(
-        id=uuid.uuid4(),
+        id=str(uuid.uuid4()),
         name=form_data.username,
         password=password.get_password_hash(form_data.password.get_secret_value()),
     )

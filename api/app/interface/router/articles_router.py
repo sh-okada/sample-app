@@ -19,7 +19,7 @@ def get_article_count(article_query_service: ArticleQueryServiceDep):
 
 
 @articles_router.get("", response_model=List[responses.Article])
-def get_docs(
+def get_articles(
     article_filter_query: requests.ArticleFilterQuery,
     article_query_service: ArticleQueryServiceDep,
 ):
@@ -27,7 +27,7 @@ def get_docs(
 
 
 @articles_router.get("/{id}", response_model=responses.Article)
-def get_doc(id: str, article_query_service: ArticleQueryServiceDep):
+def get_article(id: str, article_query_service: ArticleQueryServiceDep):
     article_id_path_param = requests.ArticleIdPathParam(id=id)
 
     return article_query_service.get_article(
