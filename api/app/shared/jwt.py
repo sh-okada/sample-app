@@ -3,7 +3,9 @@ from datetime import datetime, timedelta, timezone
 
 import jwt
 
-from app.shared import env
+from app.shared import config
+
+jwt_config = config.JWT()
 
 
 @dataclass
@@ -13,19 +15,19 @@ class TokenData:
 
 
 def create_access_token(id: str):
-    exp = datetime.now(timezone.utc) + timedelta(minutes=env.JWT.EXPIRE_MINUTES)
+    exp = datetime.now(timezone.utc) + timedelta(minutes=jwt_config.JWT_EXPIRE_MINUTES)
 
     return jwt.encode(
         payload=TokenData(id, exp).__dict__,
-        key=env.JWT.SECRET_KEY,
-        algorithm=env.JWT.ALGORITHM,
+        key=jwt_config.JWT_SECRET_KEY,
+        algorithm=jwt_config.JWT_ALGORITHM,
     )
 
 
 def decode_access_token(token: str) -> TokenData:
     payload = jwt.decode(
         token,
-        key=env.JWT.SECRET_KEY,
-        algorithms=[env.JWT.ALGORITHM],
+        key=jwt_config.JWT_SECRET_KEY,
+        algorithms=[jwt_config.JWT_ALGORITHM],
     )
     return TokenData(**payload)

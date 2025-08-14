@@ -3,10 +3,12 @@ from typing import Annotated
 from fastapi import Depends
 from sqlmodel import Session, SQLModel, create_engine
 
-from app.shared.env import DB
+from app.shared import config
+
+db_config = config.DB()
 
 engine = create_engine(
-    f"postgresql://{DB.USER}:{DB.PASSWORD}@{DB.HOST}:{DB.PORT}/{DB.NAME}",
+    f"postgresql://{db_config.db_user}:{db_config.db_password}@{db_config.db_host}:{db_config.db_port}/{db_config.db_name}",
 )
 
 
