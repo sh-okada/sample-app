@@ -4,7 +4,8 @@ from typing import TypeVar
 
 import pytest
 from freezegun import freeze_time
-from pydantic import RootModel
+from pydantic import BaseModel, RootModel
+from pydantic.fields import FieldInfo
 from pytest_mock import MockerFixture
 from sqlmodel import SQLModel
 
@@ -28,14 +29,17 @@ def expired_jwt_token(id: str):
 
 
 T_RootModel = TypeVar("T_RootModel", bound=RootModel)
+T_BaseModel = TypeVar("T_BaseModel", bound=BaseModel)
 
 
 @pytest.fixture
 def mock_uuid(mocker: MockerFixture):
-    def func(model: type[T_RootModel], value: str):
-        mocker.patch.object(
-            model.model_fields["root"], "default_factory", lambda: uuid.UUID(value)
-        )
+    def func(
+        model: type[T_RootModel] | type[T_BaseModel],
+        model_field: dict[str, FieldInfo],
+        value: str | uuid.UUID,
+    ):
+        mocker.patch.object(model_field, "default_factory", lambda: value)
         model.model_rebuild(force=True)
 
     return func

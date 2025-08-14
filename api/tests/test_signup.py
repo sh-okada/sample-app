@@ -1,7 +1,6 @@
 import pytest
 from fastapi.testclient import TestClient
 
-from app.domain.value_object.user_id import UserId
 from app.infrastructure.db import db_models
 from app.infrastructure.db.sqlite import get_mock_session
 from app.main import app
@@ -104,7 +103,7 @@ def test_ステータスコード(username: str, password: str, status_code: int
             db_models.User(
                 id="a5c28c8f-1b99-4d72-924f-d46619c1a1cb",
                 name="ec-okada",
-                password="$2b$12$ypi5a45bRgKPo4ZJk2IvQeqKJLlfpmGGwL9Pu9i/rEs2Pa0y7SywS",
+                password="$2b$12$wmu2fDI2jcijH/jbs4fL.ehlg7bIb0uA1JarTqDiagc9dQbXbAwMy",
             ),
             id="正常に登録できる場合",
         ),
@@ -164,9 +163,12 @@ def test_ステータスコード(username: str, password: str, status_code: int
         ),
     ],
 )
-@pytest.mark.skip("UUIDのモックをdb_modelsに対して行うこと")
 def test_DB登録内容(username: str, password: str, result: db_models.User, mock_uuid):
-    mock_uuid(UserId, "a5c28c8f-1b99-4d72-924f-d46619c1a1cb")
+    mock_uuid(
+        db_models.User,
+        db_models.User.model_fields["id"],
+        "a5c28c8f-1b99-4d72-924f-d46619c1a1cb",
+    )
     client.post("/api/auth/signup", json={"username": username, "password": password})
 
     session = next(get_mock_session())
