@@ -44,7 +44,7 @@ def before_each():
         ),
         pytest.param(
             {
-                "Authorization": f"Bearer {valid_jwt_token('e3b0c442-98fc-1fc4-9a3e-2c5c85e4f7da')}"
+                "Authorization": f"Bearer {valid_jwt_token('407a9844-da17-4b58-b60c-500d35d2e45a')}"
             },
             {"title": "タイトル", "text": "テキスト"},
             401,
@@ -90,7 +90,7 @@ def test_ステータスコード(headers: dict | None, request_body: dict, stat
         ),
         pytest.param(
             {
-                "Authorization": f"Bearer {valid_jwt_token('e3b0c442-98fc-1fc4-9a3e-2c5c85e4f7da')}"
+                "Authorization": f"Bearer {valid_jwt_token('407a9844-da17-4b58-b60c-500d35d2e45a')}"
             },
             {"title": "タイトル", "text": "テキスト"},
             None,
