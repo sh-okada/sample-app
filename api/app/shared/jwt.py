@@ -13,7 +13,7 @@ class TokenData(BaseModel):
     exp: int
 
 
-def create_access_token(id: pydantic_fields.UserId):
+def create_access_token(id: pydantic_fields.UserId) -> str:
     exp = datetime.now(timezone.utc) + timedelta(minutes=jwt_config.jwt_expire_minutes)
 
     return jwt.encode(

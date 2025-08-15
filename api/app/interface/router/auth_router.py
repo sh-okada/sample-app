@@ -11,7 +11,9 @@ router = APIRouter(prefix="/auth", tags=["auth"])
 
 
 @router.post("/login", response_model=responses.UserWithAccessToken)
-def login(form_data: requests.OAuth2PasswordRequest, session: SessionDep):
+def login(
+    form_data: requests.OAuth2PasswordRequest, session: SessionDep
+) -> responses.UserWithAccessToken:
     statement = select(db_models.User).where(
         db_models.User.name == form_data.username,
     )
@@ -37,7 +39,7 @@ def login(form_data: requests.OAuth2PasswordRequest, session: SessionDep):
 
 
 @router.post("/signup")
-def signUp(form_data: requests.SignUp, session: SessionDep):
+def signUp(form_data: requests.SignUp, session: SessionDep) -> Response:
     statement = select(db_models.User).where(
         db_models.User.name == form_data.username,
     )

@@ -15,7 +15,7 @@ router = APIRouter(prefix="/articles", tags=["articles"])
 
 
 @router.get("/count", response_model=responses.ArticleCount)
-def get_article_count(session: SessionDep):
+def get_article_count(session: SessionDep) -> responses.ArticleCount:
     statement = select(func.count(db_models.Article.id))
     count = session.exec(statement).one()
 
@@ -26,7 +26,7 @@ def get_article_count(session: SessionDep):
 def get_articles(
     article_filter_query: requests.ArticleFilterQuery,
     session: SessionDep,
-):
+) -> List[responses.Article]:
     offset = (article_filter_query.page - 1) * article_filter_query.limit
     statement = (
         select(db_models.Article).offset(offset).limit(article_filter_query.limit)
@@ -45,7 +45,7 @@ def get_articles(
 
 
 @router.get("/{id}", response_model=responses.Article)
-def get_article(id: UUID4, session: SessionDep):
+def get_article(id: UUID4, session: SessionDep) -> responses.Article:
     article = session.get_one(db_models.Article, id)
 
     return responses.Article(
@@ -61,7 +61,7 @@ def post_article(
     form_data: requests.PostArticle,
     article_repository: ArticleRepositoryDep,
     current_user: CurrentUserDep,
-):
+) -> Response:
     article = Article(
         title=form_data.title,
         text=form_data.text,

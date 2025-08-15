@@ -1,4 +1,4 @@
-from typing import Annotated
+from typing import Annotated, Any, Generator
 
 from fastapi import Depends
 from sqlmodel import Session, SQLModel, create_engine
@@ -12,9 +12,13 @@ engine = create_engine(
 )
 
 
-def get_session():
+def get_session() -> Generator[Session, Any, None]:
     with Session(engine) as session:
-        yield session
+        try:
+            yield session
+        except:
+            session.rollback()
+            raise
 
 
 def create_db_and_tables():

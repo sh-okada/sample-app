@@ -12,7 +12,7 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="api/auth/login")
 TokenDep = Annotated[str, Depends(oauth2_scheme)]
 
 
-def get_current_user(token: TokenDep, session: SessionDep):
+def get_current_user(token: TokenDep, session: SessionDep) -> responses.User:
     token_data = jwt.decode_access_token(token)
     user = session.get(db_models.User, token_data.sub)
 

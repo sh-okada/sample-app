@@ -9,7 +9,7 @@ class User(SQLModel, table=True):
     name: str = Field(index=True, unique=True, nullable=False)
     password: str = Field(nullable=False)
 
-    articles: List["Article"] = Relationship(back_populates="user")
+    articles: List["Article"] = Relationship(back_populates="user", cascade_delete=True)
 
 
 class Article(SQLModel, table=True):

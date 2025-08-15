@@ -9,5 +9,5 @@ router = APIRouter(prefix="/users", tags=["users"])
 @router.get("/me", response_model=responses.User)
 def read_users_me(
     current_user: CurrentUserDep,
-):
+) -> responses.User:
     return current_user
