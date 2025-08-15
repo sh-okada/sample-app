@@ -10,15 +10,15 @@ from app.infrastructure.query_service.article_query_service import (
 from app.interface import requests, responses
 from app.shared.oauth2 import CurrentUserDep
 
-articles_router = APIRouter(prefix="/articles", tags=["articles"])
+router = APIRouter(prefix="/articles", tags=["articles"])
 
 
-@articles_router.get("/count", response_model=responses.ArticleCount)
+@router.get("/count", response_model=responses.ArticleCount)
 def get_article_count(article_query_service: ArticleQueryServiceDep):
     return article_query_service.get_article_count()
 
 
-@articles_router.get("", response_model=List[responses.Article])
+@router.get("", response_model=List[responses.Article])
 def get_articles(
     article_filter_query: requests.ArticleFilterQuery,
     article_query_service: ArticleQueryServiceDep,
@@ -26,7 +26,7 @@ def get_articles(
     return article_query_service.get_articles(article_filter_query)
 
 
-@articles_router.get("/{id}", response_model=responses.Article)
+@router.get("/{id}", response_model=responses.Article)
 def get_article(id: str, article_query_service: ArticleQueryServiceDep):
     article_id_path_param = requests.ArticleIdPathParam(id=id)
 
@@ -35,7 +35,7 @@ def get_article(id: str, article_query_service: ArticleQueryServiceDep):
     )
 
 
-@articles_router.post("")
+@router.post("")
 def post_article(
     form_data: requests.PostArticle,
     post_article_use_case: PostArticleUseCaseDep,

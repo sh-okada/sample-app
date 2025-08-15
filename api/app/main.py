@@ -6,9 +6,7 @@ from pydantic import ValidationError
 from sqlalchemy.orm.exc import NoResultFound
 
 from app.infrastructure.db.postgres import create_db_and_tables
-from app.interface.router.articles_router import articles_router
-from app.interface.router.auth_router import auth_router
-from app.interface.router.users_router import users_router
+from app.interface.router import articles_router, auth_router, users_router
 
 
 @asynccontextmanager
@@ -21,9 +19,9 @@ app = FastAPI(lifespan=lifespan)
 
 api_router = APIRouter(prefix="/api")
 
-api_router.include_router(auth_router)
-api_router.include_router(users_router)
-api_router.include_router(articles_router)
+api_router.include_router(auth_router.router)
+api_router.include_router(users_router.router)
+api_router.include_router(articles_router.router)
 
 app.include_router(api_router)
 

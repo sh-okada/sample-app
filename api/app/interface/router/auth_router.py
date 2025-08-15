@@ -7,10 +7,10 @@ from app.interface import requests, responses
 from app.shared import password
 from app.shared.jwt import create_access_token
 
-auth_router = APIRouter(prefix="/auth", tags=["auth"])
+router = APIRouter(prefix="/auth", tags=["auth"])
 
 
-@auth_router.post("/login", response_model=responses.UserWithAccessToken)
+@router.post("/login", response_model=responses.UserWithAccessToken)
 def login(form_data: requests.OAuth2PasswordRequest, session: SessionDep):
     statement = select(db_models.User).where(
         db_models.User.name == form_data.username,
@@ -36,7 +36,7 @@ def login(form_data: requests.OAuth2PasswordRequest, session: SessionDep):
     )
 
 
-@auth_router.post("/signup")
+@router.post("/signup")
 def signUp(form_data: requests.SignUp, session: SessionDep):
     statement = select(db_models.User).where(
         db_models.User.name == form_data.username,
