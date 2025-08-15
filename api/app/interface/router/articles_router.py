@@ -1,6 +1,6 @@
 from typing import List
 
-from fastapi import APIRouter, Response, status
+from fastapi import APIRouter, HTTPException, Response, status
 from pydantic import UUID4
 from sqlmodel import func, select
 
@@ -46,7 +46,12 @@ def get_articles(
 
 @router.get("/{id}", response_model=responses.Article)
 def get_article(id: UUID4, session: SessionDep) -> responses.Article:
-    article = session.get_one(db_models.Article, id)
+    article = session.get(db_models.Article, id)
+
+    if not article:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="Article not found"
+        )
 
     return responses.Article(
         id=article.id,
