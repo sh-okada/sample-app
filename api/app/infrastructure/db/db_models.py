@@ -11,7 +11,7 @@ def generate_uuid4() -> str:
 class User(SQLModel, table=True):
     id: str = Field(default_factory=generate_uuid4, primary_key=True)
     name: str = Field(index=True, unique=True, nullable=False)
-    password: str = Field(nullable=False, exclude=True)
+    password: str = Field(nullable=False)
 
     articles: List["Article"] = Relationship(back_populates="user")
 

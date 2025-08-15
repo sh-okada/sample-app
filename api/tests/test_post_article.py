@@ -7,7 +7,7 @@ from app.domain.value_object.article_id import ArticleId
 from app.infrastructure.db import db_models
 from app.infrastructure.db.sqlite import get_mock_session
 from app.main import app
-from tests.conftest import expired_jwt_token, valid_jwt_token
+from tests.conftest import MockUUID, expired_jwt_token, valid_jwt_token
 
 client = TestClient(app)
 
@@ -102,12 +102,11 @@ def test_ステータスコード(headers: dict | None, request_body: dict, stat
         ),
     ],
 )
-@pytest.mark.skip("パスワードは比較対象外にしたい")
 def test_DB登録内容(
     headers: dict,
     request_body: dict,
     result: db_models.Article,
-    mock_uuid,
+    mock_uuid: MockUUID,
 ):
     mock_uuid(
         ArticleId,

@@ -1,6 +1,6 @@
 import uuid
 from datetime import datetime
-from typing import TypeVar
+from typing import Callable, TypeAlias, TypeVar
 
 import pytest
 from freezegun import freeze_time
@@ -19,21 +19,24 @@ from app.main import app
 from app.shared import jwt
 
 
-def valid_jwt_token(id: str):
+def valid_jwt_token(id: str) -> str:
     return jwt.create_access_token(id)
 
 
 @freeze_time(datetime(2025, 1, 1, 0, 0, 0))
-def expired_jwt_token(id: str):
+def expired_jwt_token(id: str) -> str:
     return jwt.create_access_token(id)
 
 
 T_RootModel = TypeVar("T_RootModel", bound=RootModel)
 T_BaseModel = TypeVar("T_BaseModel", bound=BaseModel)
+MockUUID: TypeAlias = Callable[
+    [type[T_RootModel] | type[T_BaseModel], FieldInfo, str | uuid.UUID], None
+]
 
 
 @pytest.fixture
-def mock_uuid(mocker: MockerFixture):
+def mock_uuid(mocker: MockerFixture) -> MockUUID:
     def func(
         model: type[T_RootModel] | type[T_BaseModel],
         model_field: dict[str, FieldInfo],
