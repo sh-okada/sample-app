@@ -10,6 +10,6 @@ class DB(BaseSettings):
 
 
 class JWT(BaseSettings):
-    JWT_SECRET_KEY: str = "fake_secret_key"
-    JWT_ALGORITHM: str = "HS256"
-    JWT_EXPIRE_MINUTES: int = 30
+    jwt_secret_key: str = "fake_secret_key"
+    jwt_algorithm: str = "HS256"
+    jwt_expire_minutes: int = 30
