@@ -1,21 +1,23 @@
 from pydantic import BaseModel
 
+from app.shared import pydantic_fields
+
 
 class User(BaseModel):
-    id: str
+    id: pydantic_fields.UserId
     name: str
 
 
 class UserWithAccessToken(BaseModel):
-    id: str
-    username: str
+    id: pydantic_fields.UserId
+    username: pydantic_fields.UserName
     access_token: str
 
 
 class Article(BaseModel):
-    id: str
-    title: str
-    text: str
+    id: pydantic_fields.ArticleId
+    title: pydantic_fields.ArticleTitle
+    text: pydantic_fields.ArticleText
     user: User
 
 

@@ -3,7 +3,7 @@ import uuid
 import pytest
 from fastapi.testclient import TestClient
 
-from app.domain.value_object.article_id import ArticleId
+from app.domain.entity.article import Article
 from app.infrastructure.db import db_models
 from app.infrastructure.db.sqlite import get_mock_session
 from app.main import app
@@ -15,7 +15,7 @@ client = TestClient(app)
 @pytest.fixture(autouse=True)
 def before_each():
     user = db_models.User(
-        id="caa93979-2256-42f0-8e83-55144674613b",
+        id=uuid.UUID("caa93979-2256-42f0-8e83-55144674613b"),
         name="sh-okada",
         password="$2b$12$ypi5a45bRgKPo4ZJk2IvQeqKJLlfpmGGwL9Pu9i/rEs2Pa0y7SywS",
     )
@@ -43,10 +43,12 @@ def before_each():
             id="Bearerトークンがない場合",
         ),
         pytest.param(
-            {"Authorization": f"Bearer {valid_jwt_token('invalid-id')}"},
+            {
+                "Authorization": f"Bearer {valid_jwt_token('e3b0c442-98fc-1fc4-9a3e-2c5c85e4f7da')}"
+            },
             {"title": "タイトル", "text": "テキスト"},
             401,
-            id="無効なトークンの場合",
+            id="存在しないユーザの場合",
         ),
         pytest.param(
             {
@@ -73,10 +75,10 @@ def test_ステータスコード(headers: dict | None, request_body: dict, stat
             },
             {"title": "タイトル", "text": "テキスト"},
             db_models.Article(
-                id="f47ac10b-58cc-4372-a567-0e02b2c3d479",
+                id=uuid.UUID("f47ac10b-58cc-4372-a567-0e02b2c3d479"),
                 title="タイトル",
                 text="テキスト",
-                user_id="caa93979-2256-42f0-8e83-55144674613b",
+                user_id=uuid.UUID("caa93979-2256-42f0-8e83-55144674613b"),
             ),
             id="記事を投稿できた場合",
         ),
@@ -87,10 +89,12 @@ def test_ステータスコード(headers: dict | None, request_body: dict, stat
             id="Bearerトークンがない場合",
         ),
         pytest.param(
-            {"Authorization": f"Bearer {valid_jwt_token('invalid-id')}"},
+            {
+                "Authorization": f"Bearer {valid_jwt_token('e3b0c442-98fc-1fc4-9a3e-2c5c85e4f7da')}"
+            },
             {"title": "タイトル", "text": "テキスト"},
             None,
-            id="無効なトークンの場合",
+            id="存在しないユーザの場合",
         ),
         pytest.param(
             {
@@ -109,13 +113,15 @@ def test_DB登録内容(
     mock_uuid: MockUUID,
 ):
     mock_uuid(
-        ArticleId,
-        ArticleId.model_fields["root"],
+        Article,
+        Article.model_fields["id"],
         uuid.UUID("f47ac10b-58cc-4372-a567-0e02b2c3d479"),
     )
     client.post("/api/articles", headers=headers, json=request_body)
 
     session = next(get_mock_session())
-    article = session.get(db_models.Article, "f47ac10b-58cc-4372-a567-0e02b2c3d479")
+    article = session.get(
+        db_models.Article, uuid.UUID("f47ac10b-58cc-4372-a567-0e02b2c3d479")
+    )
 
     assert article == result

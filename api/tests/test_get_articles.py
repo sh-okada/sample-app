@@ -1,3 +1,5 @@
+import uuid
+
 import pytest
 from fastapi.testclient import TestClient
 
@@ -183,12 +185,12 @@ def test_ステータスコード(query_params: dict, status_code: int):
 def test_JSONレスポンス(query_params: dict, json_response: list[dict]):
     users = [
         db_models.User(
-            id="6e2aa5a1-f792-47b8-9393-58fd657e7451",
+            id=uuid.UUID("6e2aa5a1-f792-47b8-9393-58fd657e7451"),
             name="sh-okada",
             password="$2b$12$ypi5a45bRgKPo4ZJk2IvQeqKJLlfpmGGwL9Pu9i/rEs2Pa0y7SywS",
         ),
         db_models.User(
-            id="2a7680c3-ad35-4734-93ac-b7c088c86a53",
+            id=uuid.UUID("2a7680c3-ad35-4734-93ac-b7c088c86a53"),
             name="ec-okada",
             password="$2b$12$ypi5a45bRgKPo4ZJk2IvQeqKJLlfpmGGwL9Pu9i/rEs2Pa0y7SywS",
         ),
@@ -196,40 +198,40 @@ def test_JSONレスポンス(query_params: dict, json_response: list[dict]):
 
     articles = [
         db_models.Article(
-            id="a6680a88-f226-4782-923d-4ed4a0f3697d",
+            id=uuid.UUID("a6680a88-f226-4782-923d-4ed4a0f3697d"),
             title="記事1",
             text="# Hello World",
-            user_id="6e2aa5a1-f792-47b8-9393-58fd657e7451",
+            user_id=uuid.UUID("6e2aa5a1-f792-47b8-9393-58fd657e7451"),
         ),
         db_models.Article(
-            id="f3869b72-1f0a-433a-96b0-d9b934234936",
+            id=uuid.UUID("f3869b72-1f0a-433a-96b0-d9b934234936"),
             title="記事2",
             text="# Hello World",
-            user_id="2a7680c3-ad35-4734-93ac-b7c088c86a53",
+            user_id=uuid.UUID("2a7680c3-ad35-4734-93ac-b7c088c86a53"),
         ),
         db_models.Article(
-            id="383853ee-a7b9-4792-aad8-aad82e5cc072",
+            id=uuid.UUID("383853ee-a7b9-4792-aad8-aad82e5cc072"),
             title="記事3",
             text="# Hello World",
-            user_id="2a7680c3-ad35-4734-93ac-b7c088c86a53",
+            user_id=uuid.UUID("2a7680c3-ad35-4734-93ac-b7c088c86a53"),
         ),
         db_models.Article(
-            id="fbb7be33-bb8f-4ace-97af-8d711040dd99",
+            id=uuid.UUID("fbb7be33-bb8f-4ace-97af-8d711040dd99"),
             title="記事4",
             text="# Hello World",
-            user_id="2a7680c3-ad35-4734-93ac-b7c088c86a53",
+            user_id=uuid.UUID("2a7680c3-ad35-4734-93ac-b7c088c86a53"),
         ),
         db_models.Article(
-            id="6f027d9d-040c-4c51-a135-edff8b44c331",
+            id=uuid.UUID("6f027d9d-040c-4c51-a135-edff8b44c331"),
             title="記事5",
             text="# Hello World",
-            user_id="2a7680c3-ad35-4734-93ac-b7c088c86a53",
+            user_id=uuid.UUID("2a7680c3-ad35-4734-93ac-b7c088c86a53"),
         ),
         db_models.Article(
-            id="4e093992-8f3d-424d-8fda-733884197230",
+            id=uuid.UUID("4e093992-8f3d-424d-8fda-733884197230"),
             title="記事6",
             text="# Hello World",
-            user_id="2a7680c3-ad35-4734-93ac-b7c088c86a53",
+            user_id=uuid.UUID("2a7680c3-ad35-4734-93ac-b7c088c86a53"),
         ),
     ]
 

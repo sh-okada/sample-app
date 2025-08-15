@@ -1,3 +1,5 @@
+import uuid
+
 import pytest
 from fastapi.testclient import TestClient
 
@@ -11,7 +13,7 @@ client = TestClient(app)
 @pytest.fixture(autouse=True)
 def before_each():
     user = db_models.User(
-        id="5e3868cd-3ec0-4f86-9a94-84363c64da29",
+        id=uuid.UUID("5e3868cd-3ec0-4f86-9a94-84363c64da29"),
         name="sh-okada",
         password="$2b$12$ypi5a45bRgKPo4ZJk2IvQeqKJLlfpmGGwL9Pu9i/rEs2Pa0y7SywS",
     )

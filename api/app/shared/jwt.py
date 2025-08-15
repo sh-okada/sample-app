@@ -3,7 +3,7 @@ from datetime import datetime, timedelta, timezone
 
 import jwt
 
-from app.shared import config
+from app.shared import config, pydantic_fields
 
 jwt_config = config.JWT()
 
@@ -14,11 +14,11 @@ class TokenData:
     exp: datetime
 
 
-def create_access_token(id: str):
+def create_access_token(id: pydantic_fields.UserId):
     exp = datetime.now(timezone.utc) + timedelta(minutes=jwt_config.jwt_expire_minutes)
 
     return jwt.encode(
-        payload=TokenData(id, exp).__dict__,
+        payload=TokenData(sub=str(id), exp=exp).__dict__,
         key=jwt_config.jwt_secret_key,
         algorithm=jwt_config.jwt_algorithm,
     )

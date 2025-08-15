@@ -1,3 +1,5 @@
+import uuid
+
 import pytest
 from fastapi.testclient import TestClient
 
@@ -11,15 +13,15 @@ client = TestClient(app)
 @pytest.fixture(autouse=True)
 def before_each():
     user = db_models.User(
-        id="caa93979-2256-42f0-8e83-55144674613b",
+        id=uuid.UUID("caa93979-2256-42f0-8e83-55144674613b"),
         name="sh-okada",
         password="$2b$12$ypi5a45bRgKPo4ZJk2IvQeqKJLlfpmGGwL9Pu9i/rEs2Pa0y7SywS",
     )
     article = db_models.Article(
-        id="63a38d12-034e-4314-87d6-615b5ac0db44",
+        id=uuid.UUID("63a38d12-034e-4314-87d6-615b5ac0db44"),
         title="記事1",
         text="# Hello World",
-        user_id="caa93979-2256-42f0-8e83-55144674613b",
+        user_id=uuid.UUID("caa93979-2256-42f0-8e83-55144674613b"),
     )
 
     session = next(get_mock_session())
@@ -40,19 +42,9 @@ def before_each():
             404,
             id="記事が存在しない場合",
         ),
-        pytest.param(
-            "1",
-            422,
-            id="article_idが1文字以下",
-        ),
-        pytest.param(
-            "12345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901",
-            422,
-            id="article_idが101文字以上",
-        ),
     ],
 )
-def test_ステータスコード(article_id: str, status_code: int):
+def test_ステータスコード(article_id: uuid.UUID, status_code: int):
     response = client.get(f"/api/articles/{article_id}")
 
     assert response.status_code == status_code

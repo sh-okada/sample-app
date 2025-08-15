@@ -1,3 +1,5 @@
+import uuid
+
 import pytest
 from fastapi.testclient import TestClient
 from pytest_mock import MockerFixture
@@ -13,7 +15,7 @@ client = TestClient(app)
 @pytest.fixture(autouse=True)
 def before_each():
     user = db_models.User(
-        id="5e3868cd-3ec0-4f86-9a94-84363c64da29",
+        id=uuid.UUID("5e3868cd-3ec0-4f86-9a94-84363c64da29"),
         name="sh-okada",
         password="$2b$12$ypi5a45bRgKPo4ZJk2IvQeqKJLlfpmGGwL9Pu9i/rEs2Pa0y7SywS",
     )
@@ -111,7 +113,7 @@ def test_ステータスコード(request_body: dict, status_code: int):
         pytest.param(
             {"username": "ec-okada", "password": "Password123"},
             db_models.User(
-                id="a5c28c8f-1b99-4d72-924f-d46619c1a1cb",
+                id=uuid.UUID("a5c28c8f-1b99-4d72-924f-d46619c1a1cb"),
                 name="ec-okada",
                 password="$2b$12$wmu2fDI2jcijH/jbs4fL.ehlg7bIb0uA1JarTqDiagc9dQbXbAwMy",
             ),
@@ -176,7 +178,7 @@ def test_DB登録内容(
     mock_uuid(
         db_models.User,
         db_models.User.model_fields["id"],
-        "a5c28c8f-1b99-4d72-924f-d46619c1a1cb",
+        uuid.UUID("a5c28c8f-1b99-4d72-924f-d46619c1a1cb"),
     )
     mocker.patch(
         "app.shared.password.get_password_hash",
@@ -185,6 +187,8 @@ def test_DB登録内容(
     client.post("/api/auth/signup", json=request_body)
 
     session = next(get_mock_session())
-    user = session.get(db_models.User, "a5c28c8f-1b99-4d72-924f-d46619c1a1cb")
+    user = session.get(
+        db_models.User, uuid.UUID("a5c28c8f-1b99-4d72-924f-d46619c1a1cb")
+    )
 
     assert user == result

@@ -1,3 +1,4 @@
+import uuid
 from typing import Annotated
 
 from fastapi import Depends, HTTPException, status
@@ -14,7 +15,7 @@ TokenDep = Annotated[str, Depends(oauth2_scheme)]
 
 def get_current_user(token: TokenDep, session: SessionDep):
     token_data = jwt.decode_access_token(token)
-    user = session.get(db_models.User, token_data.sub)
+    user = session.get(db_models.User, uuid.UUID(token_data.sub))
 
     if not user:
         raise HTTPException(
@@ -22,7 +23,7 @@ def get_current_user(token: TokenDep, session: SessionDep):
             headers={"WWW-Authenticate": "Bearer"},
         )
     return responses.User(
-        id=str(user.id),
+        id=user.id,
         name=user.name,
     )
 

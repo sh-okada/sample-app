@@ -16,15 +16,15 @@ from app.infrastructure.db.sqlite import (
     get_mock_session,
 )
 from app.main import app
-from app.shared import jwt
+from app.shared import jwt, pydantic_fields
 
 
-def valid_jwt_token(id: str) -> str:
+def valid_jwt_token(id: pydantic_fields.UserId) -> str:
     return jwt.create_access_token(id)
 
 
 @freeze_time(datetime(2025, 1, 1, 0, 0, 0))
-def expired_jwt_token(id: str) -> str:
+def expired_jwt_token(id: pydantic_fields.UserId) -> str:
     return jwt.create_access_token(id)
 
 

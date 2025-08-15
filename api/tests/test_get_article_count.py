@@ -1,3 +1,5 @@
+import uuid
+
 import pytest
 from fastapi.testclient import TestClient
 
@@ -14,22 +16,22 @@ def test_JSONレスポンス(result: dict[str, int]):
     session.add_all(
         [
             db_models.Article(
-                id="a6680a88-f226-4782-923d-4ed4a0f3697d",
+                id=uuid.UUID("a6680a88-f226-4782-923d-4ed4a0f3697d"),
                 title="記事1",
                 text="# Hello World",
-                user_id="6e2aa5a1-f792-47b8-9393-58fd657e7451",
+                user_id=uuid.UUID("6e2aa5a1-f792-47b8-9393-58fd657e7451"),
             ),
             db_models.Article(
-                id="b6680a88-f226-4782-923d-4ed4a0f3697e",
+                id=uuid.UUID("b6680a88-f226-4782-923d-4ed4a0f3697e"),
                 title="記事2",
                 text="# FastAPI Testing",
-                user_id="6e2aa5a1-f792-47b8-9393-58fd657e7451",
+                user_id=uuid.UUID("6e2aa5a1-f792-47b8-9393-58fd657e7451"),
             ),
             db_models.Article(
-                id="c6680a88-f226-4782-923d-4ed4a0f3697f",
+                id=uuid.UUID("c6680a88-f226-4782-923d-4ed4a0f3697f"),
                 title="記事3",
                 text="# Mocking in Tests",
-                user_id="6e2aa5a1-f792-47b8-9393-58fd657e7451",
+                user_id=uuid.UUID("6e2aa5a1-f792-47b8-9393-58fd657e7451"),
             ),
         ]
     )
