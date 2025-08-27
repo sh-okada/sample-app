@@ -5,13 +5,13 @@ from app.shared import pydantic_fields
 
 class User(BaseModel):
     id: pydantic_fields.UserId
-    name: str
+    name: pydantic_fields.UserName
 
 
 class UserWithAccessToken(BaseModel):
     id: pydantic_fields.UserId
     username: pydantic_fields.UserName
-    access_token: str
+    access_token: pydantic_fields.JWT
 
 
 class Article(BaseModel):
@@ -22,4 +22,4 @@ class Article(BaseModel):
 
 
 class ArticleCount(BaseModel):
-    count: int
+    count: pydantic_fields.ArticleCount

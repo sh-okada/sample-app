@@ -9,6 +9,7 @@ from pydantic import (
     SecretStr,
 )
 
+JWT = Annotated[str, Field(..., min_length=1, max_length=500)]
 ArticleId = Annotated[UUID4, Field(..., default_factory=uuid.uuid4)]
 ArticleTitle = Annotated[str, Field(..., max_length=200)]
 ArticleText = Annotated[str, Field(..., max_length=20000)]
@@ -16,6 +17,7 @@ UserId = Annotated[UUID4, Field(..., default_factory=uuid.uuid4)]
 UserName = Annotated[
     str, Field(..., min_length=2, max_length=8, pattern=r"^[a-zA-Z0-9._-]+$")
 ]
+ArticleCount = Annotated[int, Field(..., ge=0)]
 Page = Annotated[int, Field(default=1, ge=1, le=10000)]
 Limit = Annotated[int, Field(default=5, ge=5, le=100)]
 
