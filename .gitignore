@@ -26,12 +26,10 @@ yarn-error.log*
 package-lock.json
 yarn.lock
 
+# typescript
+*.tsbuildinfo
+next-env.d.ts
+
 # OS固有
 .DS_Store
 Thumbs.db
-
-# その他
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local

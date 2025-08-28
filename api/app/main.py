@@ -21,8 +21,3 @@ api_router.include_router(users_router.router)
 api_router.include_router(articles_router.router)
 
 app.include_router(api_router)
-
-
-# @app.exception_handler(jwt.PyJWTError)
-# def py_jwt_error_handler(request: Request, exc: jwt.PyJWTError):
-#     raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
