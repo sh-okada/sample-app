@@ -5,6 +5,7 @@ RUN npm install -g @biomejs/biome
 WORKDIR /workspace/app
 
 COPY ./package.json ./
+COPY ./package-lock.json ./
 
 RUN npm install
 
