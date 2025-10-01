@@ -19,12 +19,12 @@ uv.lock
 
 # Next.js (Node.js) 関連
 node_modules/
+.swc/
 .next/
 out/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-package-lock.json
 yarn.lock
 
 # typescript
