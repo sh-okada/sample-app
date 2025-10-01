@@ -9,7 +9,6 @@
       "extensions": [
         "ms-python.python",
         "charliermarsh.ruff",
-        "ms-vsliveshare.vsliveshare"
       ],
       "settings": {
         "[python]": {
