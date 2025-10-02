@@ -12,7 +12,6 @@ ENV/
 *.db
 instance/
 *.log
-uv.lock
 
 # VSCode
 .vscode/
