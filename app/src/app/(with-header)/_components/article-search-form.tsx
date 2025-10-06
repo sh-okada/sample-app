@@ -2,7 +2,6 @@
 
 import { getFormProps, getInputProps, useForm } from "@conform-to/react";
 import { parseWithZod } from "@conform-to/zod";
-import type { KeyboardEvent } from "react";
 import { useActionState } from "react";
 import { searchArticle } from "@/app/(with-header)/action";
 import { ErrorText } from "@/components/core/error-text";
@@ -20,12 +19,6 @@ export const ArticleSearchForm = () => {
     shouldValidate: "onSubmit",
   });
 
-  const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter") {
-      e.currentTarget.form?.requestSubmit();
-    }
-  };
-
   return (
     <form {...getFormProps(form)} action={action}>
       <Field>
@@ -33,9 +26,8 @@ export const ArticleSearchForm = () => {
         <Input
           className="w-full"
           placeholder="React"
-          {...getInputProps(fields.q, { type: "text" })}
+          {...getInputProps(fields.q, { type: "search" })}
           key={fields.q.key}
-          onKeyDown={handleKeyDown}
         />
         <ErrorText>{fields.q.errors}</ErrorText>
       </Field>
