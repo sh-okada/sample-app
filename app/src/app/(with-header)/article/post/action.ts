@@ -17,5 +17,5 @@ export async function postArticle(_prevState: unknown, formData: FormData) {
 
   await postArticleApi(submission.value);
 
-  redirect(paths.home.getHref({}));
+  redirect(paths.home.getHref());
 }

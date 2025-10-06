@@ -1,29 +1,27 @@
+import type { SearchParams } from "nuqs/server";
 import { Suspense } from "react";
 import { ArticleListContainer } from "@/app/(with-header)/_components/article-list-container";
 import { ArticleListPagination } from "@/app/(with-header)/_components/article-list-pagination";
 import { PageFrame } from "@/components/ui-parts/page-frame";
 import { Spinner } from "@/components/ui-parts/spinner";
 import { paths } from "@/config/paths";
-import { getArticlesQueryParamsSchema } from "@/lib/zod/schema";
+import { searchParamsCache } from "@/lib/nuqs/params";
 
 type PageProps = {
-  searchParams: Promise<Record<string, string | string[] | undefined>>;
+  searchParams: Promise<SearchParams>;
 };
 
 export default async function Page({ searchParams }: PageProps) {
-  const { page } = await searchParams;
-  const parzedQueryParams = await getArticlesQueryParamsSchema.parseAsync({
-    page: page,
-  });
+  const { page } = await searchParamsCache.parse(searchParams);
 
   return (
     <PageFrame>
       <PageFrame.Title>{paths.home.name}</PageFrame.Title>
       <PageFrame.Content>
-        <Suspense key={parzedQueryParams.page} fallback={<Spinner />}>
-          <ArticleListContainer page={parzedQueryParams.page ?? 1} />
+        <Suspense key={page} fallback={<Spinner />}>
+          <ArticleListContainer page={page} />
         </Suspense>
-        <ArticleListPagination currentPage={parzedQueryParams.page ?? 1} />
+        <ArticleListPagination currentPage={page} />
       </PageFrame.Content>
     </PageFrame>
   );

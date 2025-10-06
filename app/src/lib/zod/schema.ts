@@ -33,10 +33,6 @@ export const signUpSchema = z.object({
     }),
 });
 
-export const getArticlesQueryParamsSchema = z.object({
-  page: z.preprocess((v) => Number(v), z.number()).optional(),
-});
-
 export const postArticleSchema = z.object({
   title: z
     .string({ message: message.required("タイトル") })

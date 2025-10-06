@@ -2,6 +2,7 @@ import { getArticleCount } from "@/api/articles";
 import { getPaginationProps } from "@/components/core/pagination/helper/getPaginationProps";
 import { Pagination } from "@/components/core/pagination/pagination";
 import { paths } from "@/config/paths";
+import { serializeArticlesParams } from "@/lib/nuqs/params";
 
 export type ArticleListPaginationProps = {
   currentPage: number;
@@ -22,7 +23,7 @@ export const ArticleListPagination = async ({
     <Pagination
       className="justify-center"
       {...getPaginationProps(currentPage, totalPages, (page: number) =>
-        paths.home.getHref({ page: String(page) }),
+        serializeArticlesParams(paths.home.getHref(), { page }),
       )}
     />
   );

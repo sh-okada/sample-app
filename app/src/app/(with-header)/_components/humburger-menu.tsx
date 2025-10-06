@@ -13,7 +13,7 @@ const menuItems = [
   {
     key: 1,
     label: paths.home.name,
-    url: paths.home.getHref({}),
+    url: paths.home.getHref(),
   },
   {
     key: 2,
