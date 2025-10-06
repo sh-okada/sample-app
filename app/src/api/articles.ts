@@ -21,8 +21,8 @@ export type PostArticleRequest = z.infer<typeof postArticleSchema>;
 export const getArticle = async (id: string) =>
   axiosInstance.get<ArticleResponse>(`/articles/${id}`);
 
-export const getArticles = async (page: number) =>
-  axiosInstance.get<ArticleResponse[]>(`/articles?page=${page}`);
+export const getArticles = async (page: number, q: string) =>
+  axiosInstance.get<ArticleResponse[]>(`/articles?page=${page}&q=${q}`);
 
 export const getArticleCount = async () =>
   axiosInstance.get<ArticleCount>("/articles/count");

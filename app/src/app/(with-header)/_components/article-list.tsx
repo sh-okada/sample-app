@@ -10,8 +10,8 @@ export type ArticleListProps = {
 };
 
 export const ArticleList = async () => {
-  const page = searchArticleParamsCache.get("page");
-  const articles = (await getArticles(page)).data;
+  const { page, q } = searchArticleParamsCache.all();
+  const articles = (await getArticles(page, q)).data;
 
   if (articles.length === 0) {
     return <p className="text-center">記事は投稿されていません</p>;

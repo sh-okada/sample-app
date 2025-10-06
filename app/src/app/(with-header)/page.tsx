@@ -12,13 +12,13 @@ type PageProps = {
 };
 
 export default async function Page({ searchParams }: PageProps) {
-  const { page } = await searchArticleParamsCache.parse(searchParams);
+  const { page, q } = await searchArticleParamsCache.parse(searchParams);
 
   return (
     <PageFrame>
       <PageFrame.Title>{paths.home.name}</PageFrame.Title>
       <PageFrame.Content>
-        <Suspense key={page} fallback={<Spinner />}>
+        <Suspense key={`${page}-${q}`} fallback={<Spinner />}>
           <ArticleList />
         </Suspense>
         <ArticleListPagination />
