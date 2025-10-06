@@ -2,11 +2,14 @@ import {
   createSearchParamsCache,
   createSerializer,
   parseAsInteger,
+  parseAsString,
 } from "nuqs/server";
 
-export const searchArticlesParams = {
+export const searchArticleParams = {
   page: parseAsInteger.withDefault(1),
+  q: parseAsString.withDefault(""),
 };
 
-export const searchParamsCache = createSearchParamsCache(searchArticlesParams);
-export const serializeArticlesParams = createSerializer(searchArticlesParams);
+export const searchArticleParamsCache =
+  createSearchParamsCache(searchArticleParams);
+export const serializeArticlesParams = createSerializer(searchArticleParams);

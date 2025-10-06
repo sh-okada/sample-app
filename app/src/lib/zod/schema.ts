@@ -39,3 +39,9 @@ export const postArticleSchema = z.object({
     .max(200, { message: message.max("タイトル", 200) }),
   text: z.string().max(20000).default(""),
 });
+
+export const searchArticleSchema = z.object({
+  q: z
+    .string({ message: message.required("検索ワード") })
+    .max(100, { message: message.max("検索ワード", 100) }),
+});

@@ -1,17 +1,18 @@
 import type { ReactNode } from "react";
+import { getArticle } from "@/api/articles";
 import { MarkdownViewer } from "@/components/ui-parts/markdown-viewer/markdown-viewer";
 
 export type ArticleProps = {
-  title: string;
-  text: string;
+  id: string;
   children: (title: string) => ReactNode;
 };
 
-export const Article = ({ title, text, children }: ArticleProps) => {
+export const Article = async ({ id, children }: ArticleProps) => {
+  const article = (await getArticle(id)).data;
   return (
     <>
-      {children(title)}
-      <MarkdownViewer body={text} />
+      {children(article.title)}
+      <MarkdownViewer body={article.text} />
     </>
   );
 };

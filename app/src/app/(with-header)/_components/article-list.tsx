@@ -1,13 +1,18 @@
+import { getArticles } from "@/api/articles";
 import {
   type Article,
   ArticleListItem,
 } from "@/app/(with-header)/_components/article-list-item";
+import { searchArticleParamsCache } from "@/lib/nuqs/params";
 
 export type ArticleListProps = {
   articles: Article[];
 };
 
-export const ArticleList = ({ articles }: ArticleListProps) => {
+export const ArticleList = async () => {
+  const page = searchArticleParamsCache.get("page");
+  const articles = (await getArticles(page)).data;
+
   if (articles.length === 0) {
     return <p className="text-center">記事は投稿されていません</p>;
   }
