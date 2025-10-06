@@ -27,9 +27,19 @@ def get_articles(
     article_filter_query: requests.ArticleFilterQuery,
     session: SessionDep,
 ) -> List[responses.Article]:
+    # キーワード検索は空文字検索の可能性があり得るため、キーワードが指定された場合のみフィルターにかける
+    search_query = (
+        [db_models.Article.title.contains(article_filter_query.q)]
+        if article_filter_query.q
+        else []
+    )
+
     offset = (article_filter_query.page - 1) * article_filter_query.limit
     statement = (
-        select(db_models.Article).offset(offset).limit(article_filter_query.limit)
+        select(db_models.Article)
+        .where(*search_query)
+        .offset(offset)
+        .limit(article_filter_query.limit)
     )
     articles = session.exec(statement).all()
 

@@ -20,6 +20,7 @@ class PostArticle(BaseModel):
 class ArticleFilterParams(BaseModel):
     page: pydantic_fields.Page
     limit: pydantic_fields.Limit
+    q: pydantic_fields.Q
 
 
 OAuth2PasswordRequest = Annotated[OAuth2PasswordRequestForm, Depends()]

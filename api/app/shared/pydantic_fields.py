@@ -20,6 +20,7 @@ UserName = Annotated[
 ArticleCount = Annotated[int, Field(..., ge=0)]
 Page = Annotated[int, Field(default=1, ge=1, le=10000)]
 Limit = Annotated[int, Field(default=5, ge=5, le=100)]
+Q = Annotated[str, Field(default="", max_length=100)]
 
 
 """

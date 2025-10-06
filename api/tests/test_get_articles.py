@@ -18,6 +18,7 @@ client = TestClient(app)
             200,
             id="page=1&limit=5",
         ),
+        pytest.param({"q": "React"}, 200, id="q=Reactの場合"),
         pytest.param(
             {"limit": 4},
             422,
@@ -37,6 +38,11 @@ client = TestClient(app)
             {"page": 10001},
             422,
             id="pageが10001以上の場合",
+        ),
+        pytest.param(
+            {"q": "a" * 101},
+            422,
+            id="qが100文字以上の場合",
         ),
     ],
 )
@@ -179,6 +185,21 @@ def test_ステータスコード(query_params: dict, status_code: int):
             {"page": 3},
             [],
             id="page=3の場合",
+        ),
+        pytest.param(
+            {"q": "記事1"},
+            [
+                {
+                    "id": "a6680a88-f226-4782-923d-4ed4a0f3697d",
+                    "title": "記事1",
+                    "text": "# Hello World",
+                    "user": {
+                        "id": "6e2aa5a1-f792-47b8-9393-58fd657e7451",
+                        "name": "sh-okada",
+                    },
+                }
+            ],
+            id="q=記事1の場合",
         ),
     ],
 )
