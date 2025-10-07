@@ -1,5 +1,6 @@
 services:
   api:
+    platform: linux/amd64
     container_name: api
     build:
       context: .
@@ -24,6 +25,7 @@ services:
       JWT_EXPIRE_MINUTES: 30
 
   postgres:
+    platform: linux/amd64
     container_name: postgres
     build:
       context: .
