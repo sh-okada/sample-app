@@ -12,14 +12,6 @@ from app.shared.oauth2 import CurrentUserDep
 router = APIRouter(prefix="/articles", tags=["articles"])
 
 
-@router.get("/count", response_model=responses.ArticleCount)
-def get_article_count(session: SessionDep) -> responses.ArticleCount:
-    statement = select(func.count(db_models.Article.id))
-    count = session.exec(statement).one()
-
-    return responses.ArticleCount(count=count)
-
-
 @router.get("", response_model=responses.Articles)
 def get_articles(
     article_filter_query: requests.ArticleFilterQuery,

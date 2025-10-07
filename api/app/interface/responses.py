@@ -26,7 +26,3 @@ class Article(BaseModel):
 class Articles(BaseModel):
     values: List[Article]
     count: pydantic_fields.ArticleCount
-
-
-class ArticleCount(BaseModel):
-    count: pydantic_fields.ArticleCount
