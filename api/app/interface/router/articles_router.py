@@ -1,5 +1,3 @@
-from typing import List
-
 from fastapi import APIRouter, HTTPException, Response, status
 from pydantic import UUID4
 from sqlmodel import func, select
@@ -22,11 +20,11 @@ def get_article_count(session: SessionDep) -> responses.ArticleCount:
     return responses.ArticleCount(count=count)
 
 
-@router.get("", response_model=List[responses.Article])
+@router.get("", response_model=responses.Articles)
 def get_articles(
     article_filter_query: requests.ArticleFilterQuery,
     session: SessionDep,
-) -> List[responses.Article]:
+) -> responses.Articles:
     # キーワード検索は空文字検索の可能性があり得るため、キーワードが指定された場合のみフィルターにかける
     search_query = (
         [db_models.Article.title.contains(article_filter_query.q)]
@@ -43,15 +41,22 @@ def get_articles(
     )
     articles = session.exec(statement).all()
 
-    return [
-        responses.Article(
-            id=article.id,
-            title=article.title,
-            text=article.text,
-            user=responses.User(id=article.user.id, name=article.user.name),
-        )
-        for article in articles
-    ]
+    count = session.exec(
+        select(func.count(db_models.Article.id)).where(*search_query)
+    ).one()
+
+    return responses.Articles(
+        values=[
+            responses.Article(
+                id=article.id,
+                title=article.title,
+                text=article.text,
+                user=responses.User(id=article.user.id, name=article.user.name),
+            )
+            for article in articles
+        ],
+        count=count,
+    )
 
 
 @router.get("/{id}", response_model=responses.Article)

@@ -1,3 +1,5 @@
+from typing import List
+
 from pydantic import BaseModel
 
 from app.shared import pydantic_fields
@@ -19,6 +21,11 @@ class Article(BaseModel):
     title: pydantic_fields.ArticleTitle
     text: pydantic_fields.ArticleText
     user: User
+
+
+class Articles(BaseModel):
+    values: List[Article]
+    count: pydantic_fields.ArticleCount
 
 
 class ArticleCount(BaseModel):
