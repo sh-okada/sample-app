@@ -14,7 +14,7 @@ export const Header = async () => {
       </div>
       <div className="flex items-center gap-2">
         <ArticleSearchOverlay />
-        <p>{session?.user?.name}</p>
+        {session?.user && <p>{session.user.name}</p>}
         <HumburgerMenu>
           <LogoutButton />
         </HumburgerMenu>
