@@ -12,7 +12,8 @@ export type ArticleResponse = {
   };
 };
 
-export type ArticleCount = {
+export type ArticlesResponse = {
+  values: ArticleResponse[];
   count: number;
 };
 
@@ -22,10 +23,7 @@ export const getArticle = async (id: string) =>
   axiosInstance.get<ArticleResponse>(`/articles/${id}`);
 
 export const getArticles = async (page: number, q: string) =>
-  axiosInstance.get<ArticleResponse[]>(`/articles?page=${page}&q=${q}`);
-
-export const getArticleCount = async () =>
-  axiosInstance.get<ArticleCount>("/articles/count");
+  axiosInstance.get<ArticlesResponse>(`/articles?page=${page}&q=${q}`);
 
 export const postArticle = async (data: PostArticleRequest) =>
   axiosInstance.post("/articles", data);

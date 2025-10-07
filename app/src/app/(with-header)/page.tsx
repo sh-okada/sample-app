@@ -1,7 +1,6 @@
 import type { SearchParams } from "nuqs/server";
 import { Suspense } from "react";
 import { ArticleList } from "@/app/(with-header)/_components/article-list";
-import { ArticleListPagination } from "@/app/(with-header)/_components/article-list-pagination";
 import { PageFrame } from "@/components/ui-parts/page-frame";
 import { Spinner } from "@/components/ui-parts/spinner";
 import { paths } from "@/config/paths";
@@ -21,7 +20,6 @@ export default async function Page({ searchParams }: PageProps) {
         <Suspense key={`${page}-${q}`} fallback={<Spinner />}>
           <ArticleList />
         </Suspense>
-        <ArticleListPagination />
       </PageFrame.Content>
     </PageFrame>
   );
