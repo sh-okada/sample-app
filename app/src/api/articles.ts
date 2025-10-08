@@ -15,6 +15,7 @@ export type ArticleResponse = {
 export type ArticlesResponse = {
   values: ArticleResponse[];
   count: number;
+  totalPages: number;
 };
 
 export type PostArticleRequest = z.infer<typeof postArticleSchema>;

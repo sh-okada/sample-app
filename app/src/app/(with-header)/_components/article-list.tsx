@@ -19,8 +19,6 @@ export const ArticleList = async () => {
   const { page, q } = searchArticleParamsCache.all();
   const articles = (await getArticles(page, q)).data;
 
-  const totalPages = Math.max(1, Math.ceil(articles.count / 5));
-
   if (articles.count === 0) {
     return <p className="text-center">記事は投稿されていません</p>;
   }
@@ -32,7 +30,7 @@ export const ArticleList = async () => {
       ))}
       <Pagination
         className="justify-center"
-        {...getPaginationProps(page, totalPages, (page: number) =>
+        {...getPaginationProps(page, articles.totalPages, (page: number) =>
           serializeArticlesParams(paths.home.getHref(), {
             ...searchArticleParamsCache.all(),
             page,
