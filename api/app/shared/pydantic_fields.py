@@ -18,6 +18,7 @@ UserName = Annotated[
     str, Field(..., min_length=2, max_length=8, pattern=r"^[a-zA-Z0-9._-]+$")
 ]
 ArticleCount = Annotated[int, Field(..., ge=0)]
+ArticleTotalPages = Annotated[int, Field(..., ge=0)]
 Page = Annotated[int, Field(default=1, ge=1, le=10000)]
 Limit = Annotated[int, Field(default=5, ge=5, le=100)]
 Q = Annotated[str, Field(default="", max_length=100)]

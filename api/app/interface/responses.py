@@ -26,3 +26,4 @@ class Article(BaseModel):
 class Articles(BaseModel):
     values: List[Article]
     count: pydantic_fields.ArticleCount
+    total_pages: pydantic_fields.ArticleTotalPages

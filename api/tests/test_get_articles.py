@@ -106,6 +106,7 @@ def test_ステータスコード(query_params: dict, status_code: int):
                     },
                 ],
                 "count": 6,
+                "total_pages": 2,
             },
             id="page=1&limit=5",
         ),
@@ -169,6 +170,7 @@ def test_ステータスコード(query_params: dict, status_code: int):
                     },
                 ],
                 "count": 6,
+                "total_pages": 1,
             },
             id="limit=10の場合",
         ),
@@ -187,6 +189,7 @@ def test_ステータスコード(query_params: dict, status_code: int):
                     },
                 ],
                 "count": 6,
+                "total_pages": 2,
             },
             id="page=2の場合",
         ),
@@ -195,6 +198,7 @@ def test_ステータスコード(query_params: dict, status_code: int):
             {
                 "values": [],
                 "count": 6,
+                "total_pages": 2,
             },
             id="page=3の場合",
         ),
@@ -213,8 +217,18 @@ def test_ステータスコード(query_params: dict, status_code: int):
                     }
                 ],
                 "count": 1,
+                "total_pages": 1,
             },
             id="q=記事1の場合",
+        ),
+        pytest.param(
+            {"q": "存在しない記事"},
+            {
+                "values": [],
+                "count": 0,
+                "total_pages": 0,
+            },
+            id="q=存在しない記事の場合",
         ),
     ],
 )

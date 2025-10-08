@@ -37,6 +37,12 @@ def get_articles(
         select(func.count(db_models.Article.id)).where(*search_query)
     ).one()
 
+    total_pages = (
+        (count + article_filter_query.limit - 1) // article_filter_query.limit
+        if count > 0
+        else 0
+    )
+
     return responses.Articles(
         values=[
             responses.Article(
@@ -48,6 +54,7 @@ def get_articles(
             for article in articles
         ],
         count=count,
+        total_pages=total_pages,
     )
 
 
