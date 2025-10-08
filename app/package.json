@@ -17,7 +17,7 @@
     "axios-case-converter": "^1.1.1",
     "codemirror": "^6.0.2",
     "dayjs": "^1.11.13",
-    "next": "15.2.4",
+    "next": "15.5.4",
     "next-auth": "^5.0.0-beta.25",
     "nuqs": "^2.7.0",
     "postcss": "^8.5.3",
@@ -37,5 +37,8 @@
     "@types/react-syntax-highlighter": "^15.5.13",
     "ts-node": "^10.9.2",
     "typescript": "^5"
+  },
+  "overrides": {
+    "prismjs": "~1.30.0"
   }
 }
