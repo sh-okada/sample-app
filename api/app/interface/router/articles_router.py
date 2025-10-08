@@ -17,7 +17,7 @@ def get_articles(
     article_filter_query: requests.ArticleFilterQuery,
     session: SessionDep,
 ) -> responses.Articles:
-    # キーワード検索は空文字検索の可能性があり得るため、キーワードが指定された場合のみフィルターにかける
+    # 空文字検索はパフォーマンスを低下させる可能性があるため、キーワードが指定された場合のみフィルターにかける
     search_query = (
         [db_models.Article.title.contains(article_filter_query.q)]
         if article_filter_query.q
