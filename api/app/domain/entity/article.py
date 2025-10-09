@@ -8,3 +8,4 @@ class Article(BaseModel, frozen=True):
     title: pydantic_fields.ArticleTitle
     text: pydantic_fields.ArticleText
     user_id: pydantic_fields.UserId
+    published_at: pydantic_fields.PublishedAt

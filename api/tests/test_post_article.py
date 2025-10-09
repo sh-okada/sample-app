@@ -9,7 +9,12 @@ from app.domain.entity.article import Article
 from app.infrastructure.db import db_models
 from app.infrastructure.db.sqlite import get_mock_session
 from app.main import app
-from tests.conftest import MockUUID, expired_jwt_token, valid_jwt_token
+from tests.conftest import (
+    MockDateTimeDefaultFactory,
+    MockUUID,
+    expired_jwt_token,
+    valid_jwt_token,
+)
 
 client = TestClient(app)
 
@@ -110,19 +115,26 @@ def test_ステータスコード(headers: dict | None, request_body: dict, stat
         ),
     ],
 )
-@freeze_time(datetime(2025, 7, 23, 0, 0, 0))
 def test_DB登録内容(
     headers: dict,
     request_body: dict,
     result: db_models.Article,
     mock_uuid: MockUUID,
+    mock_datetime_default_factory: MockDateTimeDefaultFactory,
 ):
     mock_uuid(
         Article,
         Article.model_fields["id"],
         uuid.UUID("f47ac10b-58cc-4372-a567-0e02b2c3d479"),
     )
-    client.post("/api/articles", headers=headers, json=request_body)
+    mock_datetime_default_factory(
+        Article,
+        Article.model_fields["published_at"],
+        datetime(2025, 7, 23, 0, 0, 0),
+    )
+
+    with freeze_time(datetime(2025, 7, 23, 0, 0, 0)):
+        client.post("/api/articles", headers=headers, json=request_body)
 
     session = next(get_mock_session())
     article = session.get(

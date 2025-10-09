@@ -1,5 +1,6 @@
 import re
 import uuid
+from datetime import datetime
 from typing import Annotated
 
 from pydantic import (
@@ -13,6 +14,7 @@ JWT = Annotated[str, Field(..., min_length=1, max_length=500)]
 ArticleId = Annotated[UUID4, Field(..., default_factory=uuid.uuid4)]
 ArticleTitle = Annotated[str, Field(..., max_length=200)]
 ArticleText = Annotated[str, Field(..., max_length=20000)]
+PublishedAt = Annotated[datetime, Field(..., default_factory=datetime.now)]
 UserId = Annotated[UUID4, Field(..., default_factory=uuid.uuid4)]
 UserName = Annotated[
     str, Field(..., min_length=2, max_length=8, pattern=r"^[a-zA-Z0-9._-]+$")

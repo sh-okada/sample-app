@@ -85,9 +85,7 @@ def test_ステータスコード(username: str, password: str, status_code: int
     ],
 )
 @freeze_time(datetime(2025, 7, 23, 0, 0, 0))
-def test_JSONレスポンス(
-    username: str, password: str, json_response: dict | None, freezer
-):
+def test_JSONレスポンス(username: str, password: str, json_response: dict | None):
     response = client.post(
         "/api/auth/login", data={"username": username, "password": password}
     )

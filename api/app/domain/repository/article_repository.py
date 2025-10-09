@@ -18,6 +18,7 @@ class ArticleRepository:
                 title=article.title,
                 text=article.text,
                 user_id=article.user_id,
+                published_at=article.published_at,
             )
         )
         self.__session.commit()

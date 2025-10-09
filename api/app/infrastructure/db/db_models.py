@@ -1,4 +1,5 @@
 import uuid
+from datetime import datetime
 from typing import List
 
 from sqlmodel import Field, Relationship, SQLModel
@@ -16,6 +17,7 @@ class Article(SQLModel, table=True):
     id: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True)
     title: str = Field(nullable=False)
     text: str = Field(nullable=False)
+    published_at: datetime = Field(default_factory=datetime.now, nullable=False)
     user_id: uuid.UUID = Field(nullable=False, foreign_key="user.id")
 
     user: "User" = Relationship(back_populates="articles")

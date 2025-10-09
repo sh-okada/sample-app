@@ -49,6 +49,7 @@ def get_articles(
                 id=article.id,
                 title=article.title,
                 text=article.text,
+                published_at=article.published_at,
                 user=responses.User(id=article.user.id, name=article.user.name),
             )
             for article in articles
@@ -71,6 +72,7 @@ def get_article(id: UUID4, session: SessionDep) -> responses.Article:
         id=article.id,
         title=article.title,
         text=article.text,
+        published_at=article.published_at,
         user=responses.User(id=article.user.id, name=article.user.name),
     )
 

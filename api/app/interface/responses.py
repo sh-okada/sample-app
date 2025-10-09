@@ -20,6 +20,7 @@ class Article(BaseModel):
     id: pydantic_fields.ArticleId
     title: pydantic_fields.ArticleTitle
     text: pydantic_fields.ArticleText
+    published_at: pydantic_fields.PublishedAt
     user: User
 
 

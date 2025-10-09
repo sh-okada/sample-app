@@ -49,6 +49,24 @@ def mock_uuid(mocker: MockerFixture) -> MockUUID:
     return func
 
 
+MockDateTimeDefaultFactory: TypeAlias = Callable[
+    [type[T_RootModel] | type[T_BaseModel], FieldInfo, datetime], None
+]
+
+
+@pytest.fixture
+def mock_datetime_default_factory(mocker: MockerFixture) -> MockDateTimeDefaultFactory:
+    def func(
+        model: type[T_RootModel] | type[T_BaseModel],
+        model_field: dict[str, FieldInfo],
+        value: datetime,
+    ):
+        mocker.patch.object(model_field, "default_factory", lambda: value)
+        model.model_rebuild(force=True)
+
+    return func
+
+
 @pytest.fixture(autouse=True)
 def use_mock_db():
     app.dependency_overrides[get_session] = get_mock_session

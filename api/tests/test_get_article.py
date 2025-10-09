@@ -1,7 +1,9 @@
 import uuid
+from datetime import datetime
 
 import pytest
 from fastapi.testclient import TestClient
+from freezegun import freeze_time
 
 from app.infrastructure.db import db_models
 from app.infrastructure.db.sqlite import get_mock_session
@@ -21,6 +23,7 @@ def before_each():
         id=uuid.UUID("63a38d12-034e-4314-87d6-615b5ac0db44"),
         title="記事1",
         text="# Hello World",
+        published_at=datetime(2025, 7, 23, 0, 0, 0),
         user_id=uuid.UUID("caa93979-2256-42f0-8e83-55144674613b"),
     )
 
@@ -44,6 +47,7 @@ def before_each():
         ),
     ],
 )
+@freeze_time(datetime(2025, 7, 23, 0, 0, 0))
 def test_ステータスコード(article_id: uuid.UUID, status_code: int):
     response = client.get(f"/api/articles/{article_id}")
 
@@ -59,6 +63,7 @@ def test_ステータスコード(article_id: uuid.UUID, status_code: int):
                 "id": "63a38d12-034e-4314-87d6-615b5ac0db44",
                 "title": "記事1",
                 "text": "# Hello World",
+                "published_at": "2025-07-23T00:00:00",
                 "user": {
                     "id": "caa93979-2256-42f0-8e83-55144674613b",
                     "name": "sh-okada",
@@ -73,6 +78,7 @@ def test_ステータスコード(article_id: uuid.UUID, status_code: int):
         ),
     ],
 )
+@freeze_time(datetime(2025, 7, 23, 0, 0, 0))
 def test_json_response(article_id: str, json_response: dict):
     response = client.get(f"/api/articles/{article_id}")
 
