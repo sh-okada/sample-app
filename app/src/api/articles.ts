@@ -6,6 +6,7 @@ export type ArticleResponse = {
   id: string;
   title: string;
   text: string;
+  publishedAt: Date;
   user: {
     id: string;
     name: string;
