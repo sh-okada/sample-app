@@ -48,9 +48,9 @@ client = TestClient(app)
         ),
     ],
 )
-@freeze_time(datetime(2025, 7, 23, 0, 0, 0))
 def test_ステータスコード(query_params: dict, status_code: int):
-    response = client.get("/api/articles", params=query_params)
+    with freeze_time(datetime(2025, 7, 23, 0, 0, 0)):
+        response = client.get("/api/articles", params=query_params)
 
     assert response.status_code == status_code
 
@@ -248,7 +248,6 @@ def test_ステータスコード(query_params: dict, status_code: int):
         ),
     ],
 )
-@freeze_time(datetime(2025, 7, 23, 0, 0, 0))
 def test_JSONレスポンス(query_params: dict, json_response: list[dict]):
     users = [
         db_models.User(
@@ -312,6 +311,7 @@ def test_JSONレスポンス(query_params: dict, json_response: list[dict]):
     session.add_all(users + articles)
     session.commit()
 
-    response = client.get("/api/articles", params=query_params)
+    with freeze_time(datetime(2025, 7, 23, 0, 0, 0)):
+        response = client.get("/api/articles", params=query_params)
 
     assert response.json() == json_response

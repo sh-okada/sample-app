@@ -1,7 +1,9 @@
 import uuid
+from datetime import datetime
 
 import pytest
 from fastapi.testclient import TestClient
+from freezegun import freeze_time
 from pytest_mock import MockerFixture
 
 from app.infrastructure.db import db_models
@@ -102,7 +104,8 @@ def before_each():
     ],
 )
 def test_ステータスコード(request_body: dict, status_code: int):
-    response = client.post("/api/auth/signup", json=request_body)
+    with freeze_time(datetime(2025, 7, 23, 0, 0, 0)):
+        response = client.post("/api/auth/signup", json=request_body)
 
     assert response.status_code == status_code
 
@@ -184,7 +187,8 @@ def test_DB登録内容(
         "app.shared.password.get_password_hash",
         return_value="$2b$12$wmu2fDI2jcijH/jbs4fL.ehlg7bIb0uA1JarTqDiagc9dQbXbAwMy",
     )
-    client.post("/api/auth/signup", json=request_body)
+    with freeze_time(datetime(2025, 7, 23, 0, 0, 0)):
+        client.post("/api/auth/signup", json=request_body)
 
     session = next(get_mock_session())
     user = session.get(

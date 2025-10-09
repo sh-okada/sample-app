@@ -67,9 +67,9 @@ def before_each():
         ),
     ],
 )
-@freeze_time(datetime(2025, 7, 23, 0, 0, 0))
 def test_ステータスコード(headers: dict | None, request_body: dict, status_code: int):
-    response = client.post("/api/articles", headers=headers, json=request_body)
+    with freeze_time(datetime(2025, 7, 23, 0, 0, 0)):
+        response = client.post("/api/articles", headers=headers, json=request_body)
 
     assert response.status_code == status_code
 

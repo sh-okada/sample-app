@@ -47,9 +47,9 @@ def before_each():
         ),
     ],
 )
-@freeze_time(datetime(2025, 7, 23, 0, 0, 0))
 def test_ステータスコード(article_id: uuid.UUID, status_code: int):
-    response = client.get(f"/api/articles/{article_id}")
+    with freeze_time(datetime(2025, 7, 23, 0, 0, 0)):
+        response = client.get(f"/api/articles/{article_id}")
 
     assert response.status_code == status_code
 
@@ -78,8 +78,8 @@ def test_ステータスコード(article_id: uuid.UUID, status_code: int):
         ),
     ],
 )
-@freeze_time(datetime(2025, 7, 23, 0, 0, 0))
 def test_json_response(article_id: str, json_response: dict):
-    response = client.get(f"/api/articles/{article_id}")
+    with freeze_time(datetime(2025, 7, 23, 0, 0, 0)):
+        response = client.get(f"/api/articles/{article_id}")
 
     assert response.json() == json_response
