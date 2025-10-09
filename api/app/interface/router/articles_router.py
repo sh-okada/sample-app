@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException, Response, status
 from pydantic import UUID4
-from sqlmodel import func, select
+from sqlmodel import desc, func, select
 
 from app.domain.entity.article import Article
 from app.domain.repository.article_repository import ArticleRepositoryDep
@@ -28,6 +28,7 @@ def get_articles(
     statement = (
         select(db_models.Article)
         .where(*search_query)
+        .order_by(desc(db_models.Article.published_at))
         .offset(offset)
         .limit(article_filter_query.limit)
     )

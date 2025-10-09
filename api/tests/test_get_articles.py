@@ -63,30 +63,20 @@ def test_ステータスコード(query_params: dict, status_code: int):
             {
                 "values": [
                     {
-                        "id": "a6680a88-f226-4782-923d-4ed4a0f3697d",
-                        "title": "記事1",
+                        "id": "4e093992-8f3d-424d-8fda-733884197230",
+                        "title": "記事6",
                         "text": "# Hello World",
-                        "published_at": "2025-07-23T01:00:00",
-                        "user": {
-                            "id": "6e2aa5a1-f792-47b8-9393-58fd657e7451",
-                            "name": "sh-okada",
-                        },
-                    },
-                    {
-                        "id": "f3869b72-1f0a-433a-96b0-d9b934234936",
-                        "title": "記事2",
-                        "text": "# Hello World",
-                        "published_at": "2025-07-23T02:00:00",
+                        "published_at": "2025-07-23T06:00:00",
                         "user": {
                             "id": "2a7680c3-ad35-4734-93ac-b7c088c86a53",
                             "name": "ec-okada",
                         },
                     },
                     {
-                        "id": "383853ee-a7b9-4792-aad8-aad82e5cc072",
-                        "title": "記事3",
+                        "id": "6f027d9d-040c-4c51-a135-edff8b44c331",
+                        "title": "記事5",
                         "text": "# Hello World",
-                        "published_at": "2025-07-23T03:00:00",
+                        "published_at": "2025-07-23T05:00:00",
                         "user": {
                             "id": "2a7680c3-ad35-4734-93ac-b7c088c86a53",
                             "name": "ec-okada",
@@ -103,10 +93,20 @@ def test_ステータスコード(query_params: dict, status_code: int):
                         },
                     },
                     {
-                        "id": "6f027d9d-040c-4c51-a135-edff8b44c331",
-                        "title": "記事5",
+                        "id": "383853ee-a7b9-4792-aad8-aad82e5cc072",
+                        "title": "記事3",
                         "text": "# Hello World",
-                        "published_at": "2025-07-23T05:00:00",
+                        "published_at": "2025-07-23T03:00:00",
+                        "user": {
+                            "id": "2a7680c3-ad35-4734-93ac-b7c088c86a53",
+                            "name": "ec-okada",
+                        },
+                    },
+                    {
+                        "id": "f3869b72-1f0a-433a-96b0-d9b934234936",
+                        "title": "記事2",
+                        "text": "# Hello World",
+                        "published_at": "2025-07-23T02:00:00",
                         "user": {
                             "id": "2a7680c3-ad35-4734-93ac-b7c088c86a53",
                             "name": "ec-okada",
@@ -123,40 +123,10 @@ def test_ステータスコード(query_params: dict, status_code: int):
             {
                 "values": [
                     {
-                        "id": "a6680a88-f226-4782-923d-4ed4a0f3697d",
-                        "title": "記事1",
+                        "id": "4e093992-8f3d-424d-8fda-733884197230",
+                        "title": "記事6",
                         "text": "# Hello World",
-                        "published_at": "2025-07-23T01:00:00",
-                        "user": {
-                            "id": "6e2aa5a1-f792-47b8-9393-58fd657e7451",
-                            "name": "sh-okada",
-                        },
-                    },
-                    {
-                        "id": "f3869b72-1f0a-433a-96b0-d9b934234936",
-                        "title": "記事2",
-                        "text": "# Hello World",
-                        "published_at": "2025-07-23T02:00:00",
-                        "user": {
-                            "id": "2a7680c3-ad35-4734-93ac-b7c088c86a53",
-                            "name": "ec-okada",
-                        },
-                    },
-                    {
-                        "id": "383853ee-a7b9-4792-aad8-aad82e5cc072",
-                        "title": "記事3",
-                        "text": "# Hello World",
-                        "published_at": "2025-07-23T03:00:00",
-                        "user": {
-                            "id": "2a7680c3-ad35-4734-93ac-b7c088c86a53",
-                            "name": "ec-okada",
-                        },
-                    },
-                    {
-                        "id": "fbb7be33-bb8f-4ace-97af-8d711040dd99",
-                        "title": "記事4",
-                        "text": "# Hello World",
-                        "published_at": "2025-07-23T04:00:00",
+                        "published_at": "2025-07-23T06:00:00",
                         "user": {
                             "id": "2a7680c3-ad35-4734-93ac-b7c088c86a53",
                             "name": "ec-okada",
@@ -173,13 +143,43 @@ def test_ステータスコード(query_params: dict, status_code: int):
                         },
                     },
                     {
-                        "id": "4e093992-8f3d-424d-8fda-733884197230",
-                        "title": "記事6",
+                        "id": "fbb7be33-bb8f-4ace-97af-8d711040dd99",
+                        "title": "記事4",
                         "text": "# Hello World",
-                        "published_at": "2025-07-23T06:00:00",
+                        "published_at": "2025-07-23T04:00:00",
                         "user": {
                             "id": "2a7680c3-ad35-4734-93ac-b7c088c86a53",
                             "name": "ec-okada",
+                        },
+                    },
+                    {
+                        "id": "383853ee-a7b9-4792-aad8-aad82e5cc072",
+                        "title": "記事3",
+                        "text": "# Hello World",
+                        "published_at": "2025-07-23T03:00:00",
+                        "user": {
+                            "id": "2a7680c3-ad35-4734-93ac-b7c088c86a53",
+                            "name": "ec-okada",
+                        },
+                    },
+                    {
+                        "id": "f3869b72-1f0a-433a-96b0-d9b934234936",
+                        "title": "記事2",
+                        "text": "# Hello World",
+                        "published_at": "2025-07-23T02:00:00",
+                        "user": {
+                            "id": "2a7680c3-ad35-4734-93ac-b7c088c86a53",
+                            "name": "ec-okada",
+                        },
+                    },
+                    {
+                        "id": "a6680a88-f226-4782-923d-4ed4a0f3697d",
+                        "title": "記事1",
+                        "text": "# Hello World",
+                        "published_at": "2025-07-23T01:00:00",
+                        "user": {
+                            "id": "6e2aa5a1-f792-47b8-9393-58fd657e7451",
+                            "name": "sh-okada",
                         },
                     },
                 ],
@@ -193,13 +193,13 @@ def test_ステータスコード(query_params: dict, status_code: int):
             {
                 "values": [
                     {
-                        "id": "4e093992-8f3d-424d-8fda-733884197230",
-                        "title": "記事6",
+                        "id": "a6680a88-f226-4782-923d-4ed4a0f3697d",
+                        "title": "記事1",
                         "text": "# Hello World",
-                        "published_at": "2025-07-23T06:00:00",
+                        "published_at": "2025-07-23T01:00:00",
                         "user": {
-                            "id": "2a7680c3-ad35-4734-93ac-b7c088c86a53",
-                            "name": "ec-okada",
+                            "id": "6e2aa5a1-f792-47b8-9393-58fd657e7451",
+                            "name": "sh-okada",
                         },
                     },
                 ],
