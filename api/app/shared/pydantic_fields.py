@@ -19,6 +19,7 @@ UserId = Annotated[UUID4, Field(..., default_factory=uuid.uuid4)]
 UserName = Annotated[
     str, Field(..., min_length=2, max_length=8, pattern=r"^[a-zA-Z0-9._-]+$")
 ]
+LikedArticleId = Annotated[UUID4, Field(..., default_factory=uuid.uuid4)]
 ArticleCount = Annotated[int, Field(..., ge=0)]
 ArticleTotalPages = Annotated[int, Field(..., ge=0)]
 Page = Annotated[int, Field(default=1, ge=1, le=10000)]

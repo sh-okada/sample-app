@@ -11,6 +11,7 @@ class User(SQLModel, table=True):
     password: str = Field(nullable=False)
 
     articles: List["Article"] = Relationship(back_populates="user", cascade_delete=True)
+    likes: List["Like"] = Relationship(back_populates="user")
 
 
 class Article(SQLModel, table=True):
@@ -21,3 +22,13 @@ class Article(SQLModel, table=True):
     user_id: uuid.UUID = Field(nullable=False, foreign_key="user.id")
 
     user: "User" = Relationship(back_populates="articles")
+    likes: List["Like"] = Relationship(back_populates="article")
+
+
+class Like(SQLModel, table=True):
+    id: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True)
+    user_id: uuid.UUID = Field(nullable=False, foreign_key="user.id")
+    article_id: uuid.UUID = Field(nullable=False, foreign_key="article.id")
+
+    user: "User" = Relationship(back_populates="likes")
+    article: "Article" = Relationship(back_populates="likes")
