@@ -19,6 +19,7 @@ from app.main import app
 from app.shared import jwt, pydantic_fields
 
 
+@freeze_time(datetime(2025, 7, 23, 0, 0, 0))
 def valid_jwt_token(id: pydantic_fields.UserId) -> str:
     return jwt.create_access_token(id)
 

@@ -1,7 +1,9 @@
 import uuid
+from datetime import datetime
 
 import pytest
 from fastapi.testclient import TestClient
+from freezegun import freeze_time
 
 from app.infrastructure.db import db_models
 from app.infrastructure.db.sqlite import get_mock_session
@@ -46,6 +48,7 @@ def before_each():
         ),
     ],
 )
+@freeze_time(datetime(2025, 7, 23, 0, 0, 0))
 def test_ステータスコード(username: str, password: str, status_code: int):
     response = client.post(
         "/api/auth/login", data={"username": username, "password": password}
@@ -63,7 +66,7 @@ def test_ステータスコード(username: str, password: str, status_code: int
             {
                 "id": "5e3868cd-3ec0-4f86-9a94-84363c64da29",
                 "username": "sh-okada",
-                "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1ZTM4NjhjZC0zZWMwLTRmODYtOWE5NC04NDM2M2M2NGRhMjkiLCJleHAiOjE3NTM2NjI2MDB9.TlErX63YzBqw882C2jIMHFGmQY4ITuAgX-IAJX6QtA0",
+                "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1ZTM4NjhjZC0zZWMwLTRmODYtOWE5NC04NDM2M2M2NGRhMjkiLCJleHAiOjE3NTMyMzA2MDB9.cTPZJnsl44nXmY9dfDS7mOc1s11mjCenmdy14FH_wzg",
             },
             id="ユーザー名とパスワードが正しい場合",
         ),
@@ -81,10 +84,10 @@ def test_ステータスコード(username: str, password: str, status_code: int
         ),
     ],
 )
+@freeze_time(datetime(2025, 7, 23, 0, 0, 0))
 def test_JSONレスポンス(
     username: str, password: str, json_response: dict | None, freezer
 ):
-    freezer.move_to("2025-07-28 00:00:00")
     response = client.post(
         "/api/auth/login", data={"username": username, "password": password}
     )

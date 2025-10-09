@@ -1,7 +1,9 @@
 import uuid
+from datetime import datetime
 
 import pytest
 from fastapi.testclient import TestClient
+from freezegun import freeze_time
 
 from app.domain.entity.article import Article
 from app.infrastructure.db import db_models
@@ -60,6 +62,7 @@ def before_each():
         ),
     ],
 )
+@freeze_time(datetime(2025, 7, 23, 0, 0, 0))
 def test_ステータスコード(headers: dict | None, request_body: dict, status_code: int):
     response = client.post("/api/articles", headers=headers, json=request_body)
 
@@ -78,6 +81,7 @@ def test_ステータスコード(headers: dict | None, request_body: dict, stat
                 id=uuid.UUID("f47ac10b-58cc-4372-a567-0e02b2c3d479"),
                 title="タイトル",
                 text="テキスト",
+                published_at=datetime(2025, 7, 23, 0, 0, 0),
                 user_id=uuid.UUID("caa93979-2256-42f0-8e83-55144674613b"),
             ),
             id="記事を投稿できた場合",
@@ -106,6 +110,7 @@ def test_ステータスコード(headers: dict | None, request_body: dict, stat
         ),
     ],
 )
+@freeze_time(datetime(2025, 7, 23, 0, 0, 0))
 def test_DB登録内容(
     headers: dict,
     request_body: dict,
