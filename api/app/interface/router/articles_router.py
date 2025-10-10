@@ -66,7 +66,7 @@ def get_article(id: UUID4, session: SessionDep) -> responses.Article:
 
     if not article:
         raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail="Article not found"
+            status_code=status.HTTP_404_NOT_FOUND, detail="Article not found."
         )
 
     return responses.Article(

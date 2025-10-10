@@ -22,11 +22,13 @@ def login(
     if not user:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Incorrect username or password.",
         )
 
     if not password.verify_password(form_data.password, user.password):
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Incorrect username or password.",
         )
 
     access_token = create_access_token(user.id)
@@ -47,6 +49,7 @@ def signUp(form_data: requests.SignUp, session: SessionDep) -> Response:
     if user:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Username is already in use.",
         )
 
     user = db_models.User(
