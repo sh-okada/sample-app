@@ -73,13 +73,13 @@ def test_ステータスコード(username: str, password: str, status_code: int
         pytest.param(
             "bad-user",
             "Password123",
-            {"detail": "Bad Request"},
+            {"detail": "Incorrect username or password."},
             id="ユーザー名が間違っている場合",
         ),
         pytest.param(
             "sh-okada",
             "BadPassword123",
-            {"detail": "Bad Request"},
+            {"detail": "Incorrect username or password."},
             id="パスワードが間違っている場合",
         ),
     ],
