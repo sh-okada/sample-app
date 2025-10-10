@@ -118,7 +118,7 @@ def test_ステータスコード(headers: dict | None, request_body: dict, stat
 def test_DB登録内容(
     headers: dict,
     request_body: dict,
-    result: db_models.Article,
+    result: db_models.Article | None,
     mock_uuid: MockUUID,
     mock_datetime_default_factory: MockDateTimeDefaultFactory,
 ):

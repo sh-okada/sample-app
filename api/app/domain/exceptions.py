@@ -2,9 +2,9 @@ class DomainException(Exception):
     pass
 
 
-class MyPostArticle(DomainException):
+class MyPostArticleError(DomainException):
     pass
 
 
-class ArticleAlreadyLiked(DomainException):
+class ArticleAlreadyLikedError(DomainException):
     pass

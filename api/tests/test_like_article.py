@@ -5,10 +5,11 @@ import pytest
 from fastapi.testclient import TestClient
 from freezegun import freeze_time
 
+from app.domain.entity.liked_article import LikedArticle
 from app.infrastructure.db import db_models
 from app.infrastructure.db.sqlite import get_mock_session
 from app.main import app
-from tests.conftest import expired_jwt_token, valid_jwt_token
+from tests.conftest import MockUUID, expired_jwt_token, valid_jwt_token
 
 client = TestClient(app)
 
@@ -81,7 +82,7 @@ def before_each():
             {
                 "Authorization": f"Bearer {valid_jwt_token('caa93979-2256-42f0-8e83-55144674613b')}"
             },
-            "63a38d12-034e-4314-87d6-615b5ac0db44",
+            "f3869b72-1f0a-433a-96b0-d9b934234936",
             400,
             id="既に記事にいいねをしている場合",
         ),
@@ -107,11 +108,104 @@ def before_each():
             401,
             id="トークンの有効期限がない場合",
         ),
+        pytest.param(
+            {
+                "Authorization": f"Bearer {valid_jwt_token('2a7680c3-ad35-4734-93ac-b7c088c86a53')}"
+            },
+            "338e404d-6125-46e5-8bd1-054241a4ea43",
+            404,
+            id="存在しない記事にいいねした場合",
+        ),
     ],
 )
-@pytest.mark.skip
 def test_ステータスコード(headers: dict | None, article_id: str, status_code: int):
     with freeze_time(datetime(2025, 7, 23, 0, 0, 0)):
         response = client.post(f"/api/likes/{article_id}", headers=headers)
 
     assert response.status_code == status_code
+
+
+@pytest.mark.parametrize(
+    "headers, article_id, result",
+    [
+        pytest.param(
+            {
+                "Authorization": f"Bearer {valid_jwt_token('2a7680c3-ad35-4734-93ac-b7c088c86a53')}"
+            },
+            "63a38d12-034e-4314-87d6-615b5ac0db44",
+            db_models.Like(
+                id=uuid.UUID("d5bb23ef-4011-4e55-b3b0-7e562e7e2430"),
+                user_id=uuid.UUID("2a7680c3-ad35-4734-93ac-b7c088c86a53"),
+                article_id=uuid.UUID("63a38d12-034e-4314-87d6-615b5ac0db44"),
+            ),
+            id="記事にいいねできた場合",
+        ),
+        pytest.param(
+            {
+                "Authorization": f"Bearer {valid_jwt_token('caa93979-2256-42f0-8e83-55144674613b')}"
+            },
+            "63a38d12-034e-4314-87d6-615b5ac0db44",
+            None,
+            id="自分の記事にいいねした場合",
+        ),
+        pytest.param(
+            {
+                "Authorization": f"Bearer {valid_jwt_token('caa93979-2256-42f0-8e83-55144674613b')}"
+            },
+            "f3869b72-1f0a-433a-96b0-d9b934234936",
+            None,
+            id="既に記事にいいねをしている場合",
+        ),
+        pytest.param(
+            None,
+            {"title": "タイトル", "text": "テキスト"},
+            None,
+            id="Bearerトークンがない場合",
+        ),
+        pytest.param(
+            {
+                "Authorization": f"Bearer {valid_jwt_token('407a9844-da17-4b58-b60c-500d35d2e45a')}"
+            },
+            "63a38d12-034e-4314-87d6-615b5ac0db44",
+            None,
+            id="存在しないユーザの場合",
+        ),
+        pytest.param(
+            {
+                "Authorization": f"Bearer {expired_jwt_token('caa93979-2256-42f0-8e83-55144674613b')}"
+            },
+            "63a38d12-034e-4314-87d6-615b5ac0db44",
+            None,
+            id="トークンの有効期限がない場合",
+        ),
+        pytest.param(
+            {
+                "Authorization": f"Bearer {valid_jwt_token('2a7680c3-ad35-4734-93ac-b7c088c86a53')}"
+            },
+            "338e404d-6125-46e5-8bd1-054241a4ea43",
+            None,
+            id="存在しない記事にいいねした場合",
+        ),
+    ],
+)
+def test_DB登録内容(
+    headers: dict | None,
+    article_id: str,
+    result: db_models.Like | None,
+    mock_uuid: MockUUID,
+):
+    mock_uuid(
+        LikedArticle,
+        LikedArticle.model_fields["id"],
+        uuid.UUID("d5bb23ef-4011-4e55-b3b0-7e562e7e2430"),
+    )
+
+    with freeze_time(datetime(2025, 7, 23, 0, 0, 0)):
+        client.post(f"/api/likes/{article_id}", headers=headers)
+
+    session = next(get_mock_session())
+    like = session.get(
+        db_models.Like, uuid.UUID("d5bb23ef-4011-4e55-b3b0-7e562e7e2430")
+    )
+
+    assert like == result
