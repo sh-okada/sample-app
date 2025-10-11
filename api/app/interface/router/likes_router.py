@@ -4,15 +4,15 @@ from app.domain.exceptions import ArticleAlreadyLikedError, MyPostArticleError
 from app.domain.repository.article_repository import ArticleRepositoryDep
 from app.domain.repository.liked_article_repository import LikedArticleRepositoryDep
 from app.domain.repository.user_repository import UserRepositoryDep
-from app.shared import pydantic_fields
+from app.interface import responses
 from app.shared.oauth2 import CurrentUserDep
 
 router = APIRouter(prefix="/likes", tags=["likes"])
 
 
-@router.post("/{article_id}")
+@router.post("")
 def like_article(
-    article_id: pydantic_fields.ArticleId,
+    form_data: responses.LikeArticle,
     user_repository: UserRepositoryDep,
     article_repository: ArticleRepositoryDep,
     liked_article_repository: LikedArticleRepositoryDep,
@@ -24,7 +24,7 @@ def like_article(
             status_code=status.HTTP_404_NOT_FOUND, detail="User not found."
         )
 
-    article = article_repository.find_by_id(article_id)
+    article = article_repository.find_by_id(form_data.article_id)
     if not article:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="Article not found."

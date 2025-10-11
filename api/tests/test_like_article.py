@@ -60,13 +60,13 @@ def before_each():
 
 
 @pytest.mark.parametrize(
-    "headers, article_id, status_code",
+    "headers, request_body, status_code",
     [
         pytest.param(
             {
                 "Authorization": f"Bearer {valid_jwt_token('2a7680c3-ad35-4734-93ac-b7c088c86a53')}"
             },
-            "63a38d12-034e-4314-87d6-615b5ac0db44",
+            {"article_id": "63a38d12-034e-4314-87d6-615b5ac0db44"},
             201,
             id="記事にいいねできた場合",
         ),
@@ -74,7 +74,7 @@ def before_each():
             {
                 "Authorization": f"Bearer {valid_jwt_token('caa93979-2256-42f0-8e83-55144674613b')}"
             },
-            "63a38d12-034e-4314-87d6-615b5ac0db44",
+            {"article_id": "63a38d12-034e-4314-87d6-615b5ac0db44"},
             400,
             id="自分の記事にいいねした場合",
         ),
@@ -82,13 +82,13 @@ def before_each():
             {
                 "Authorization": f"Bearer {valid_jwt_token('caa93979-2256-42f0-8e83-55144674613b')}"
             },
-            "f3869b72-1f0a-433a-96b0-d9b934234936",
+            {"article_id": "f3869b72-1f0a-433a-96b0-d9b934234936"},
             400,
             id="既に記事にいいねをしている場合",
         ),
         pytest.param(
             None,
-            {"title": "タイトル", "text": "テキスト"},
+            {"article_id": "63a38d12-034e-4314-87d6-615b5ac0db44"},
             401,
             id="Bearerトークンがない場合",
         ),
@@ -96,7 +96,7 @@ def before_each():
             {
                 "Authorization": f"Bearer {valid_jwt_token('407a9844-da17-4b58-b60c-500d35d2e45a')}"
             },
-            "63a38d12-034e-4314-87d6-615b5ac0db44",
+            {"article_id": "63a38d12-034e-4314-87d6-615b5ac0db44"},
             401,
             id="存在しないユーザの場合",
         ),
@@ -104,7 +104,7 @@ def before_each():
             {
                 "Authorization": f"Bearer {expired_jwt_token('caa93979-2256-42f0-8e83-55144674613b')}"
             },
-            "63a38d12-034e-4314-87d6-615b5ac0db44",
+            {"article_id": "63a38d12-034e-4314-87d6-615b5ac0db44"},
             401,
             id="トークンの有効期限がない場合",
         ),
@@ -112,27 +112,27 @@ def before_each():
             {
                 "Authorization": f"Bearer {valid_jwt_token('2a7680c3-ad35-4734-93ac-b7c088c86a53')}"
             },
-            "338e404d-6125-46e5-8bd1-054241a4ea43",
+            {"article_id": "338e404d-6125-46e5-8bd1-054241a4ea43"},
             404,
             id="存在しない記事にいいねした場合",
         ),
     ],
 )
-def test_ステータスコード(headers: dict | None, article_id: str, status_code: int):
+def test_ステータスコード(headers: dict | None, request_body: dict, status_code: int):
     with freeze_time(datetime(2025, 7, 23, 0, 0, 0)):
-        response = client.post(f"/api/likes/{article_id}", headers=headers)
+        response = client.post("/api/likes", headers=headers, json=request_body)
 
     assert response.status_code == status_code
 
 
 @pytest.mark.parametrize(
-    "headers, article_id, result",
+    "headers, request_body, result",
     [
         pytest.param(
             {
                 "Authorization": f"Bearer {valid_jwt_token('2a7680c3-ad35-4734-93ac-b7c088c86a53')}"
             },
-            "63a38d12-034e-4314-87d6-615b5ac0db44",
+            {"article_id": "63a38d12-034e-4314-87d6-615b5ac0db44"},
             db_models.Like(
                 id=uuid.UUID("d5bb23ef-4011-4e55-b3b0-7e562e7e2430"),
                 user_id=uuid.UUID("2a7680c3-ad35-4734-93ac-b7c088c86a53"),
@@ -144,7 +144,7 @@ def test_ステータスコード(headers: dict | None, article_id: str, status_
             {
                 "Authorization": f"Bearer {valid_jwt_token('caa93979-2256-42f0-8e83-55144674613b')}"
             },
-            "63a38d12-034e-4314-87d6-615b5ac0db44",
+            {"article_id": "63a38d12-034e-4314-87d6-615b5ac0db44"},
             None,
             id="自分の記事にいいねした場合",
         ),
@@ -152,13 +152,13 @@ def test_ステータスコード(headers: dict | None, article_id: str, status_
             {
                 "Authorization": f"Bearer {valid_jwt_token('caa93979-2256-42f0-8e83-55144674613b')}"
             },
-            "f3869b72-1f0a-433a-96b0-d9b934234936",
+            {"article_id": "f3869b72-1f0a-433a-96b0-d9b934234936"},
             None,
             id="既に記事にいいねをしている場合",
         ),
         pytest.param(
             None,
-            {"title": "タイトル", "text": "テキスト"},
+            {"article_id": "63a38d12-034e-4314-87d6-615b5ac0db44"},
             None,
             id="Bearerトークンがない場合",
         ),
@@ -166,7 +166,7 @@ def test_ステータスコード(headers: dict | None, article_id: str, status_
             {
                 "Authorization": f"Bearer {valid_jwt_token('407a9844-da17-4b58-b60c-500d35d2e45a')}"
             },
-            "63a38d12-034e-4314-87d6-615b5ac0db44",
+            {"article_id": "63a38d12-034e-4314-87d6-615b5ac0db44"},
             None,
             id="存在しないユーザの場合",
         ),
@@ -174,7 +174,7 @@ def test_ステータスコード(headers: dict | None, article_id: str, status_
             {
                 "Authorization": f"Bearer {expired_jwt_token('caa93979-2256-42f0-8e83-55144674613b')}"
             },
-            "63a38d12-034e-4314-87d6-615b5ac0db44",
+            {"article_id": "63a38d12-034e-4314-87d6-615b5ac0db44"},
             None,
             id="トークンの有効期限がない場合",
         ),
@@ -182,7 +182,7 @@ def test_ステータスコード(headers: dict | None, article_id: str, status_
             {
                 "Authorization": f"Bearer {valid_jwt_token('2a7680c3-ad35-4734-93ac-b7c088c86a53')}"
             },
-            "338e404d-6125-46e5-8bd1-054241a4ea43",
+            {"article_id": "338e404d-6125-46e5-8bd1-054241a4ea43"},
             None,
             id="存在しない記事にいいねした場合",
         ),
@@ -190,7 +190,7 @@ def test_ステータスコード(headers: dict | None, article_id: str, status_
 )
 def test_DB登録内容(
     headers: dict | None,
-    article_id: str,
+    request_body: dict,
     result: db_models.Like | None,
     mock_uuid: MockUUID,
 ):
@@ -201,7 +201,7 @@ def test_DB登録内容(
     )
 
     with freeze_time(datetime(2025, 7, 23, 0, 0, 0)):
-        client.post(f"/api/likes/{article_id}", headers=headers)
+        client.post("/api/likes", headers=headers, json=request_body)
 
     session = next(get_mock_session())
     like = session.get(

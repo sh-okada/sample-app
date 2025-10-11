@@ -28,3 +28,7 @@ class Articles(BaseModel):
     values: List[Article]
     count: pydantic_fields.ArticleCount
     total_pages: pydantic_fields.ArticleTotalPages
+
+
+class LikeArticle(BaseModel):
+    article_id: pydantic_fields.ArticleId
