@@ -11,7 +11,7 @@ router = APIRouter(prefix="/likes", tags=["likes"])
 
 
 @router.post("/{article_id}")
-def like(
+def like_article(
     article_id: pydantic_fields.ArticleId,
     user_repository: UserRepositoryDep,
     article_repository: ArticleRepositoryDep,
