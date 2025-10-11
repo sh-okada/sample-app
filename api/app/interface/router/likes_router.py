@@ -5,6 +5,7 @@ from app.domain.repository.article_repository import ArticleRepositoryDep
 from app.domain.repository.liked_article_repository import LikedArticleRepositoryDep
 from app.domain.repository.user_repository import UserRepositoryDep
 from app.interface import responses
+from app.shared import pydantic_fields
 from app.shared.oauth2 import CurrentUserDep
 
 router = APIRouter(prefix="/likes", tags=["likes"])
@@ -45,3 +46,20 @@ def like_article(
         )
 
     return Response(status_code=status.HTTP_201_CREATED)
+
+
+@router.delete("/{id}")
+def unlike_article(
+    id: pydantic_fields.LikedArticleId,
+    liked_article_repository: LikedArticleRepositoryDep,
+    _: CurrentUserDep,
+):
+    liked_article = liked_article_repository.find_by_id(id)
+    if not liked_article:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="Liked article not found."
+        )
+
+    liked_article_repository.delete(liked_article)
+
+    return Response(status_code=status.HTTP_200_OK)
