@@ -32,7 +32,7 @@ client = TestClient(app)
             "63a38d12-034e-4314-87d6-615b5ac0db44",
             400,
             {"detail": "Have not liked this article."},
-            id="自分以外のいいねを解除しようとした場合",
+            id="自分以外のいいねは解除できないこと",
         ),
         pytest.param(
             None,
