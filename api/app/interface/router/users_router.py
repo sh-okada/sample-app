@@ -7,7 +7,7 @@ from app.domain.exceptions import (
 )
 from app.domain.repository.article_repository import ArticleRepositoryDep
 from app.domain.repository.user_repository import UserRepositoryDep
-from app.interface import responses
+from app.interface import requests, responses
 from app.shared import pydantic_fields
 from app.shared.oauth2 import CurrentUserDep
 
@@ -21,9 +21,9 @@ def read_users_me(
     return current_user
 
 
-@router.post("/me/liked-articles")
+@router.post("/me/liked-articles", response_model=responses.Message)
 def like_article(
-    form_data: responses.LikeArticle,
+    form_data: requests.LikeArticle,
     user_repository: UserRepositoryDep,
     article_repository: ArticleRepositoryDep,
     current_user: CurrentUserDep,
@@ -55,7 +55,7 @@ def like_article(
 
     user_repository.update(user)
 
-    return Response(status_code=status.HTTP_201_CREATED)
+    return responses.Message(detail="Article liked successfully.")
 
 
 @router.delete("/me/liked-articles/{id}")

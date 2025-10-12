@@ -30,5 +30,5 @@ class Articles(BaseModel):
     total_pages: pydantic_fields.ArticleTotalPages
 
 
-class LikeArticle(BaseModel):
-    article_id: pydantic_fields.ArticleId
+class Message(BaseModel):
+    detail: str

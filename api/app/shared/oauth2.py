@@ -2,7 +2,7 @@ from typing import Annotated
 
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
-from jwt import ExpiredSignatureError
+from jwt import ExpiredSignatureError, PyJWTError
 
 from app.infrastructure.db import db_models
 from app.infrastructure.db.postgres import SessionDep
@@ -19,13 +19,13 @@ def get_current_user(token: TokenDep, session: SessionDep) -> responses.User:
     except ExpiredSignatureError:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Token has expired",
+            detail="Token has expired.",
             headers={"WWW-Authenticate": "Bearer"},
         )
-    except jwt.PyJWTError:
+    except PyJWTError:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Invalid token",
+            detail="Invalid token.",
             headers={"WWW-Authenticate": "Bearer"},
         )
 
@@ -34,6 +34,7 @@ def get_current_user(token: TokenDep, session: SessionDep) -> responses.User:
     if not user:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="User not found.",
             headers={"WWW-Authenticate": "Bearer"},
         )
     return responses.User(

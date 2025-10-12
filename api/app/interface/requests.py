@@ -17,6 +17,10 @@ class PostArticle(BaseModel):
     text: pydantic_fields.ArticleText
 
 
+class LikeArticle(BaseModel):
+    article_id: pydantic_fields.ArticleId
+
+
 class ArticleFilterParams(BaseModel):
     page: pydantic_fields.Page
     limit: pydantic_fields.Limit
