@@ -178,7 +178,7 @@ def test_レスポンス(query_params: dict, status_code: int, json_response: di
                 "count": 6,
                 "total_pages": 2,
             },
-            id="クエリパラメータを指定しない場合、q=&page=2&limit=5がデフォルトになること",
+            id="q=&page=2&limit=5がデフォルトになること",
         ),
         pytest.param(
             {"limit": 10},
@@ -248,7 +248,7 @@ def test_レスポンス(query_params: dict, status_code: int, json_response: di
                 "count": 6,
                 "total_pages": 1,
             },
-            id="クエリパラメータがlimit=10の場合、最大10件の記事が一度に取得できること",
+            id="一度に取得できる記事の件数がlimitで指定できること",
         ),
         pytest.param(
             {"page": 2},
@@ -268,7 +268,7 @@ def test_レスポンス(query_params: dict, status_code: int, json_response: di
                 "count": 6,
                 "total_pages": 2,
             },
-            id="クエリパラメータがpage=2の場合、2ページ目の記事が取得できること",
+            id="pageで指定したページの記事一覧が取得できること",
         ),
         pytest.param(
             {"page": 3},
@@ -277,7 +277,7 @@ def test_レスポンス(query_params: dict, status_code: int, json_response: di
                 "count": 6,
                 "total_pages": 2,
             },
-            id="クエリパラメータのpageの値がtotal_pagesより大きい場合、空の記事一覧が取得できること",
+            id="total_pagesを超えると空の記事一覧が取得できること",
         ),
         pytest.param(
             {"q": "記事1"},
@@ -297,7 +297,7 @@ def test_レスポンス(query_params: dict, status_code: int, json_response: di
                 "count": 1,
                 "total_pages": 1,
             },
-            id="クエリパラメータがq=記事1の場合、タイトルに記事1を含む記事が取得できること",
+            id="qで指定した文字列がタイトルに含まれる記事一覧が取得できること",
         ),
         pytest.param(
             {"q": "存在しない記事"},
@@ -306,7 +306,7 @@ def test_レスポンス(query_params: dict, status_code: int, json_response: di
                 "count": 0,
                 "total_pages": 0,
             },
-            id="クエリパラメータのqに該当する記事が存在しない場合、空の記事一覧が取得できること",
+            id="qで指定した文字列がタイトルに含まれる記事がない場合、空の記事一覧が取得できること",
         ),
     ],
 )
