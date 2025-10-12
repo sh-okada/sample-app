@@ -28,13 +28,13 @@ client = TestClient(app)
                     "name": "sh-okada",
                 },
             },
-            id="記事が存在する場合",
+            id="idが存在する場合、記事の情報がJSONで取得できること",
         ),
         pytest.param(
             "e88e396b-d6fa-4660-a5a6-a5af0f2638be",
             404,
             {"detail": "Article not found."},
-            id="記事が存在しない場合",
+            id="idが存在しない場合、404エラーになること",
         ),
     ],
 )
