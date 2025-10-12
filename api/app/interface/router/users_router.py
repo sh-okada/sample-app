@@ -1,4 +1,4 @@
-from fastapi import APIRouter, HTTPException, Response, status
+from fastapi import APIRouter, HTTPException, status
 
 from app.domain.exceptions import (
     ArticleAlreadyLikedError,
@@ -58,13 +58,13 @@ def like_article(
     return responses.Message(detail="Article liked successfully.")
 
 
-@router.delete("/me/liked-articles/{id}")
+@router.delete("/me/liked-articles/{id}", response_model=responses.Message)
 def unlike_article(
     id: pydantic_fields.ArticleId,
     user_repository: UserRepositoryDep,
     article_repository: ArticleRepositoryDep,
     current_user: CurrentUserDep,
-):
+) -> responses.Message:
     user = user_repository.find_by_id(current_user.id)
     if not user:
         raise HTTPException(
@@ -87,4 +87,4 @@ def unlike_article(
 
     user_repository.update(user)
 
-    return Response(status_code=status.HTTP_200_OK)
+    return responses.Message(detail="article unliked successfully.")

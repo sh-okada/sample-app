@@ -1,4 +1,6 @@
-from fastapi import APIRouter, HTTPException, Response, status
+from fastapi import APIRouter, HTTPException, status
+from fastapi.encoders import jsonable_encoder
+from fastapi.responses import JSONResponse
 from sqlmodel import select
 
 from app.infrastructure.db import db_models
@@ -40,8 +42,8 @@ def login(
     )
 
 
-@router.post("/signup")
-def signUp(form_data: requests.SignUp, session: SessionDep) -> Response:
+@router.post("/signup", response_model=responses.Message)
+def signUp(form_data: requests.SignUp, session: SessionDep) -> JSONResponse:
     statement = select(db_models.User).where(
         db_models.User.name == form_data.username,
     )
@@ -60,4 +62,9 @@ def signUp(form_data: requests.SignUp, session: SessionDep) -> Response:
     session.add(user)
     session.commit()
 
-    return Response(status_code=status.HTTP_201_CREATED)
+    return JSONResponse(
+        status_code=status.HTTP_201_CREATED,
+        content=jsonable_encoder(
+            responses.Message(detail="User created successfully.")
+        ),
+    )

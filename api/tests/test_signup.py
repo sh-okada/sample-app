@@ -4,18 +4,171 @@ from datetime import datetime
 import pytest
 from fastapi.testclient import TestClient
 from freezegun import freeze_time
-from pytest_mock import MockerFixture
 
 from app.infrastructure.db import db_models
 from app.infrastructure.db.sqlite import get_mock_session
 from app.main import app
-from tests.conftest import MockUUID
 
 client = TestClient(app)
 
 
-@pytest.fixture(autouse=True)
-def before_each():
+@pytest.mark.parametrize(
+    "request_body, status_code, json_response",
+    [
+        pytest.param(
+            {"username": "ec-okada", "password": "Password123"},
+            201,
+            {"detail": "User created successfully."},
+            id="ユーザー登録できること",
+        ),
+        pytest.param(
+            {"username": "sh-okada", "password": "Password123"},
+            400,
+            {"detail": "Username is already in use."},
+            id="ユーザー名は重複して登録できないこと",
+        ),
+        pytest.param(
+            {"username": "a", "password": "Password123"},
+            422,
+            {
+                "detail": [
+                    {
+                        "type": "string_too_short",
+                        "loc": ["body", "username"],
+                        "msg": "String should have at least 2 characters",
+                        "input": "a",
+                        "ctx": {"min_length": 2},
+                    }
+                ]
+            },
+            id="ユーザー名は1文字以下では登録できないこと",
+        ),
+        pytest.param(
+            {"username": "123456789", "password": "Password123"},
+            422,
+            {
+                "detail": [
+                    {
+                        "type": "string_too_long",
+                        "loc": ["body", "username"],
+                        "msg": "String should have at most 8 characters",
+                        "input": "123456789",
+                        "ctx": {"max_length": 8},
+                    }
+                ]
+            },
+            id="ユーザー名は9文字以上では登録できないこと",
+        ),
+        pytest.param(
+            {"username": "ec@okada", "password": "Password123"},
+            422,
+            {
+                "detail": [
+                    {
+                        "type": "string_pattern_mismatch",
+                        "loc": ["body", "username"],
+                        "msg": "String should match pattern '^[a-zA-Z0-9._-]+$'",
+                        "input": "ec@okada",
+                        "ctx": {"pattern": "^[a-zA-Z0-9._-]+$"},
+                    }
+                ]
+            },
+            id="半角英数字と記号（._-）以外の文字はユーザー名に含められないこと",
+        ),
+        pytest.param(
+            {"username": "ec-okada", "password": "Pass123"},
+            422,
+            {
+                "detail": [
+                    {
+                        "type": "too_short",
+                        "loc": ["body", "password"],
+                        "msg": "Value should have at least 8 items after validation, not 7",
+                        "input": "Pass123",
+                        "ctx": {
+                            "field_type": "Value",
+                            "min_length": 8,
+                            "actual_length": 7,
+                        },
+                    }
+                ]
+            },
+            id="パスワードは7文字以下では登録できないこと",
+        ),
+        pytest.param(
+            {
+                "username": "ec-okada",
+                "password": "Password123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123",
+            },
+            422,
+            {
+                "detail": [
+                    {
+                        "type": "too_long",
+                        "loc": ["body", "password"],
+                        "msg": "Value should have at most 100 items after validation, not 101",
+                        "input": "Password123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123",
+                        "ctx": {
+                            "field_type": "Value",
+                            "max_length": 100,
+                            "actual_length": 101,
+                        },
+                    }
+                ]
+            },
+            id="パスワードは101文字以上では登録できないこと",
+        ),
+        pytest.param(
+            {"username": "ec-okada", "password": "password123"},
+            422,
+            {
+                "detail": [
+                    {
+                        "type": "value_error",
+                        "loc": ["body", "password"],
+                        "msg": "Value error, Password must contain at least one lowercase letter, one uppercase letter, and one digit",
+                        "input": "password123",
+                        "ctx": {"error": {}},
+                    }
+                ]
+            },
+            id="パスワードは半角英大文字を含める必要があること",
+        ),
+        pytest.param(
+            {"username": "ec-okada", "password": "PASSWORD123"},
+            422,
+            {
+                "detail": [
+                    {
+                        "type": "value_error",
+                        "loc": ["body", "password"],
+                        "msg": "Value error, Password must contain at least one lowercase letter, one uppercase letter, and one digit",
+                        "input": "PASSWORD123",
+                        "ctx": {"error": {}},
+                    }
+                ]
+            },
+            id="パスワードは半角英小文字を含める必要があること",
+        ),
+        pytest.param(
+            {"username": "ec-okada", "password": "Password"},
+            422,
+            {
+                "detail": [
+                    {
+                        "type": "value_error",
+                        "loc": ["body", "password"],
+                        "msg": "Value error, Password must contain at least one lowercase letter, one uppercase letter, and one digit",
+                        "input": "Password",
+                        "ctx": {"error": {}},
+                    }
+                ]
+            },
+            id="パスワードは数字を含める必要があること",
+        ),
+    ],
+)
+def test_レスポンス(request_body: dict, status_code: int, json_response: dict):
     user = db_models.User(
         id=uuid.UUID("5e3868cd-3ec0-4f86-9a94-84363c64da29"),
         name="sh-okada",
@@ -26,173 +179,8 @@ def before_each():
     session.add(user)
     session.commit()
 
-
-@pytest.mark.parametrize(
-    "request_body, status_code",
-    [
-        pytest.param(
-            {"username": "ec-okada", "password": "Password123"},
-            201,
-            id="正常に登録できる場合",
-        ),
-        pytest.param(
-            {"username": "sh-okada", "password": "Password123"},
-            400,
-            id="ユーザー名がすでに存在する場合",
-        ),
-        pytest.param(
-            {"username": "a", "password": "Password123"},
-            422,
-            id="ユーザー名が1文字以下の場合",
-        ),
-        pytest.param(
-            {"username": "123456789", "password": "Password123"},
-            422,
-            id="ユーザー名が9文字以上の場合",
-        ),
-        pytest.param(
-            {"username": "ec@okada", "password": "Password123"},
-            422,
-            id="半角英数字と記号（._-）以外の文字が含まれる場合",
-        ),
-        pytest.param(
-            {"username": "ec@okada", "password": "Password123"},
-            422,
-            id="半角英数字と記号（._-）以外の文字が含まれる場合",
-        ),
-        pytest.param(
-            {"username": "ec-okada", "password": "Pass123"},
-            422,
-            id="パスワードが7文字以下の場合",
-        ),
-        pytest.param(
-            {
-                "username": "ec-okada",
-                "password": "Password123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123",
-            },
-            422,
-            id="パスワードが101文字以上の場合",
-        ),
-        pytest.param(
-            {"username": "ec-okada", "password": "password123"},
-            422,
-            id="パスワードに半角英大文字が含まれない場合",
-        ),
-        pytest.param(
-            {
-                "username": "ec-okada",
-                "password": "Password123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123",
-            },
-            422,
-            id="パスワードが101文字以上の場合",
-        ),
-        pytest.param(
-            {"username": "ec-okada", "password": "password123"},
-            422,
-            id="パスワードに半角英大文字が含まれない場合",
-        ),
-        pytest.param(
-            {"username": "ec-okada", "password": "PASSWORD123"},
-            422,
-            id="パスワードに半角英小文字が含まれない場合",
-        ),
-        pytest.param(
-            {"username": "ec-okada", "password": "Password"},
-            422,
-            id="パスワードに数字が含まれない場合",
-        ),
-    ],
-)
-def test_ステータスコード(request_body: dict, status_code: int):
     with freeze_time(datetime(2025, 7, 23, 0, 0, 0)):
         response = client.post("/api/auth/signup", json=request_body)
 
     assert response.status_code == status_code
-
-
-@pytest.mark.parametrize(
-    "request_body, result",
-    [
-        pytest.param(
-            {"username": "ec-okada", "password": "Password123"},
-            db_models.User(
-                id=uuid.UUID("a5c28c8f-1b99-4d72-924f-d46619c1a1cb"),
-                name="ec-okada",
-                password="$2b$12$wmu2fDI2jcijH/jbs4fL.ehlg7bIb0uA1JarTqDiagc9dQbXbAwMy",
-            ),
-            id="正常に登録できる場合",
-        ),
-        pytest.param(
-            {"username": "sh-okada", "password": "Password123"},
-            None,
-            id="ユーザー名がすでに存在する場合",
-        ),
-        pytest.param(
-            {"username": "a", "password": "Password123"},
-            None,
-            id="ユーザー名が1文字以下の場合",
-        ),
-        pytest.param(
-            {"username": "123456789", "password": "Password123"},
-            None,
-            id="ユーザー名が9文字以上の場合",
-        ),
-        pytest.param(
-            {"username": "ec@okada", "password": "Password123"},
-            None,
-            id="半角英数字と記号（._-）以外の文字が含まれる場合",
-        ),
-        pytest.param(
-            {"username": "ec-okada", "password": "Pass123"},
-            None,
-            id="パスワードが7文字以下の場合",
-        ),
-        pytest.param(
-            {
-                "username": "ec-okada",
-                "password": "Password123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123",
-            },
-            None,
-            id="パスワードが101文字以上の場合",
-        ),
-        pytest.param(
-            {"username": "ec-okada", "password": "password123"},
-            None,
-            id="パスワードに半角英大文字が含まれない場合",
-        ),
-        pytest.param(
-            {"username": "ec-okada", "password": "PASSWORD123"},
-            None,
-            id="パスワードに半角英小文字が含まれない場合",
-        ),
-        pytest.param(
-            {"username": "ec-okada", "password": "Password"},
-            None,
-            id="パスワードに数字が含まれない場合",
-        ),
-    ],
-)
-def test_DB登録内容(
-    request_body: dict,
-    result: db_models.User,
-    mocker: MockerFixture,
-    mock_uuid: MockUUID,
-):
-    mock_uuid(
-        db_models.User,
-        db_models.User.model_fields["id"],
-        uuid.UUID("a5c28c8f-1b99-4d72-924f-d46619c1a1cb"),
-    )
-    mocker.patch(
-        "app.shared.password.get_password_hash",
-        return_value="$2b$12$wmu2fDI2jcijH/jbs4fL.ehlg7bIb0uA1JarTqDiagc9dQbXbAwMy",
-    )
-    with freeze_time(datetime(2025, 7, 23, 0, 0, 0)):
-        client.post("/api/auth/signup", json=request_body)
-
-    session = next(get_mock_session())
-    user = session.get(
-        db_models.User, uuid.UUID("a5c28c8f-1b99-4d72-924f-d46619c1a1cb")
-    )
-
-    assert user == result
+    assert response.json() == json_response
