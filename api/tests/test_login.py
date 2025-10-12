@@ -42,8 +42,8 @@ client = TestClient(app)
         ),
     ],
 )
-def test_JSONレスポンス(
-    username: str, password: str, status_code: int, json_response: dict | None
+def test_レスポンス(
+    username: str, password: str, status_code: int, json_response: dict
 ):
     user = db_models.User(
         id=uuid.UUID("5e3868cd-3ec0-4f86-9a94-84363c64da29"),

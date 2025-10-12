@@ -134,7 +134,7 @@ def test_レスポンス(
     headers: dict | None,
     request_body: dict,
     status_code: int,
-    json_response: dict | None,
+    json_response: dict,
 ):
     with freeze_time(datetime(2025, 7, 23, 0, 0, 0)):
         response = client.post(

@@ -1,4 +1,6 @@
-from fastapi import APIRouter, HTTPException, Response, status
+from fastapi import APIRouter, HTTPException, status
+from fastapi.encoders import jsonable_encoder
+from fastapi.responses import JSONResponse
 from pydantic import UUID4
 from sqlmodel import desc, func, select
 
@@ -78,12 +80,12 @@ def get_article(id: UUID4, session: SessionDep) -> responses.Article:
     )
 
 
-@router.post("")
+@router.post("", response_model=responses.Message)
 def post_article(
     form_data: requests.PostArticle,
     article_repository: ArticleRepositoryDep,
     current_user: CurrentUserDep,
-) -> Response:
+) -> JSONResponse:
     article = Article(
         title=form_data.title,
         text=form_data.text,
@@ -91,4 +93,9 @@ def post_article(
     )
     article_repository.create(article)
 
-    return Response(status_code=status.HTTP_201_CREATED)
+    return JSONResponse(
+        status_code=status.HTTP_201_CREATED,
+        content=jsonable_encoder(
+            responses.Message(detail="Article created successfully.")
+        ),
+    )

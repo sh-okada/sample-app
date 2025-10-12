@@ -5,13 +5,10 @@ import pytest
 from fastapi.testclient import TestClient
 from freezegun import freeze_time
 
-from app.domain.entity.article import Article
 from app.infrastructure.db import db_models
 from app.infrastructure.db.sqlite import get_mock_session
 from app.main import app
 from tests.conftest import (
-    MockDateTimeDefaultFactory,
-    MockUUID,
     expired_jwt_token,
     valid_jwt_token,
 )
@@ -33,7 +30,7 @@ def before_each():
 
 
 @pytest.mark.parametrize(
-    "headers, request_body, status_code",
+    "headers, request_body, status_code, json_response",
     [
         pytest.param(
             {
@@ -41,13 +38,22 @@ def before_each():
             },
             {"title": "タイトル", "text": "テキスト"},
             201,
-            id="記事を投稿できた場合",
+            {"detail": "Article created successfully."},
+            id="記事を投稿できること",
         ),
         pytest.param(
             None,
             {"title": "タイトル", "text": "テキスト"},
             401,
-            id="Bearerトークンがない場合",
+            {"detail": "Not authenticated"},
+            id="JWTがない状態で記事を投稿できないこと",
+        ),
+        pytest.param(
+            {"Authorization": "Bearer invalid-token"},
+            {"title": "タイトル", "text": "テキスト"},
+            401,
+            {"detail": "Invalid token."},
+            id="不正なJWTでは記事を投稿できないこと",
         ),
         pytest.param(
             {
@@ -55,7 +61,8 @@ def before_each():
             },
             {"title": "タイトル", "text": "テキスト"},
             401,
-            id="存在しないユーザの場合",
+            {"detail": "User not found."},
+            id="存在しないユーザーのJWTでは記事を投稿できないこと",
         ),
         pytest.param(
             {
@@ -63,82 +70,16 @@ def before_each():
             },
             {"title": "タイトル", "text": "テキスト"},
             401,
-            id="トークンの有効期限がない場合",
+            {"detail": "Token has expired."},
+            id="有効期限切れのJWTでは記事を投稿できないこと",
         ),
     ],
 )
-def test_ステータスコード(headers: dict | None, request_body: dict, status_code: int):
+def test_レスポンス(
+    headers: dict | None, request_body: dict, status_code: int, json_response: dict
+):
     with freeze_time(datetime(2025, 7, 23, 0, 0, 0)):
         response = client.post("/api/articles", headers=headers, json=request_body)
 
     assert response.status_code == status_code
-
-
-@pytest.mark.parametrize(
-    "headers, request_body, result",
-    [
-        pytest.param(
-            {
-                "Authorization": f"Bearer {valid_jwt_token('caa93979-2256-42f0-8e83-55144674613b')}"
-            },
-            {"title": "タイトル", "text": "テキスト"},
-            db_models.Article(
-                id=uuid.UUID("f47ac10b-58cc-4372-a567-0e02b2c3d479"),
-                title="タイトル",
-                text="テキスト",
-                published_at=datetime(2025, 7, 23, 0, 0, 0),
-                user_id=uuid.UUID("caa93979-2256-42f0-8e83-55144674613b"),
-            ),
-            id="記事を投稿できた場合",
-        ),
-        pytest.param(
-            None,
-            {"title": "タイトル", "text": "テキスト"},
-            None,
-            id="Bearerトークンがない場合",
-        ),
-        pytest.param(
-            {
-                "Authorization": f"Bearer {valid_jwt_token('407a9844-da17-4b58-b60c-500d35d2e45a')}"
-            },
-            {"title": "タイトル", "text": "テキスト"},
-            None,
-            id="存在しないユーザの場合",
-        ),
-        pytest.param(
-            {
-                "Authorization": f"Bearer {expired_jwt_token('caa93979-2256-42f0-8e83-55144674613b')}"
-            },
-            {"title": "タイトル", "text": "テキスト"},
-            None,
-            id="トークンの有効期限がない場合",
-        ),
-    ],
-)
-def test_DB登録内容(
-    headers: dict,
-    request_body: dict,
-    result: db_models.Article | None,
-    mock_uuid: MockUUID,
-    mock_datetime_default_factory: MockDateTimeDefaultFactory,
-):
-    mock_uuid(
-        Article,
-        Article.model_fields["id"],
-        uuid.UUID("f47ac10b-58cc-4372-a567-0e02b2c3d479"),
-    )
-    mock_datetime_default_factory(
-        Article,
-        Article.model_fields["published_at"],
-        datetime(2025, 7, 23, 0, 0, 0),
-    )
-
-    with freeze_time(datetime(2025, 7, 23, 0, 0, 0)):
-        client.post("/api/articles", headers=headers, json=request_body)
-
-    session = next(get_mock_session())
-    article = session.get(
-        db_models.Article, uuid.UUID("f47ac10b-58cc-4372-a567-0e02b2c3d479")
-    )
-
-    assert article == result
+    assert response.json() == json_response

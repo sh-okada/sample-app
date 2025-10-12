@@ -25,7 +25,7 @@ class ArticleRepository:
             published_at=article.published_at,
         )
 
-    def create(self, article: Article):
+    def create(self, article: Article) -> Article:
         self.__session.add(
             db_models.Article(
                 id=article.id,
@@ -36,6 +36,8 @@ class ArticleRepository:
             )
         )
         self.__session.commit()
+
+        return article
 
 
 ArticleRepositoryDep = Annotated[ArticleRepository, Depends()]

@@ -27,7 +27,7 @@ def like_article(
     user_repository: UserRepositoryDep,
     article_repository: ArticleRepositoryDep,
     current_user: CurrentUserDep,
-) -> Response:
+) -> responses.Message:
     user = user_repository.find_by_id(current_user.id)
     if not user:
         raise HTTPException(

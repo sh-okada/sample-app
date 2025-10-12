@@ -34,7 +34,7 @@ class UserRepository:
         )
 
     def update(self, user: User):
-        user_db_model = self.__session.get(db_models.User, user.id)
+        update_user = self.__session.get(db_models.User, user.id)
 
         likes = [
             db_models.Like(
@@ -43,7 +43,7 @@ class UserRepository:
             )
             for liked_article in user.liked_articles
         ]
-        user_db_model.likes = likes
+        update_user.likes = likes
         self.__session.commit()
 
 
