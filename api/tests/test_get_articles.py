@@ -178,7 +178,7 @@ def test_レスポンス(query_params: dict, status_code: int, json_response: di
                 "count": 6,
                 "total_pages": 2,
             },
-            id="q=&page=2&limit=5がデフォルトになること",
+            id="q=&page=1&limit=5がデフォルトになること",
         ),
         pytest.param(
             {"limit": 10},
