@@ -2,7 +2,7 @@ from typing import Annotated
 
 from fastapi import Depends
 
-from app.domain.entity.liked_article import LikedArticle
+from app.domain.entity.article import Article
 from app.domain.entity.user import User
 from app.infrastructure.db import db_models
 from app.infrastructure.db.postgres import SessionDep
@@ -22,12 +22,29 @@ class UserRepository:
         return User(
             id=user.id,
             liked_articles=[
-                LikedArticle(
-                    id=like.id, article_id=like.article_id, user_id=like.user_id
+                Article(
+                    id=like.article.id,
+                    title=like.article.title,
+                    text=like.article.text,
+                    user_id=like.article.user_id,
+                    published_at=like.article.published_at,
                 )
                 for like in user.likes
             ],
         )
+
+    def update(self, user: User):
+        user_db_model = self.__session.get(db_models.User, user.id)
+
+        likes = [
+            db_models.Like(
+                user_id=user.id,
+                article_id=liked_article.id,
+            )
+            for liked_article in user.liked_articles
+        ]
+        user_db_model.likes = likes
+        self.__session.commit()
 
 
 UserRepositoryDep = Annotated[UserRepository, Depends()]

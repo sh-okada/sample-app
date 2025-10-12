@@ -8,3 +8,7 @@ class MyPostArticleError(DomainException):
 
 class ArticleAlreadyLikedError(DomainException):
     pass
+
+
+class ArticleAlreadyUnLikedError(DomainException):
+    pass

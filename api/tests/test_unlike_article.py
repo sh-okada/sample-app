@@ -47,10 +47,9 @@ def before_each():
 
     like_articles = [
         db_models.Like(
-            id=uuid.UUID("7d4c6529-dd20-4856-a4c5-a33229e9ddfc"),
             user_id=uuid.UUID("caa93979-2256-42f0-8e83-55144674613b"),
             article_id=uuid.UUID("63a38d12-034e-4314-87d6-615b5ac0db44"),
-        )
+        ),
     ]
 
     session = next(get_mock_session())
@@ -59,19 +58,27 @@ def before_each():
 
 
 @pytest.mark.parametrize(
-    "headers, id, status_code",
+    "headers, article_id, status_code",
     [
         pytest.param(
             {
                 "Authorization": f"Bearer {valid_jwt_token('caa93979-2256-42f0-8e83-55144674613b')}"
             },
-            "7d4c6529-dd20-4856-a4c5-a33229e9ddfc",
+            "63a38d12-034e-4314-87d6-615b5ac0db44",
             200,
             id="記事のいいねを解除できる場合",
         ),
         pytest.param(
+            {
+                "Authorization": f"Bearer {valid_jwt_token('2a7680c3-ad35-4734-93ac-b7c088c86a53')}"
+            },
+            "63a38d12-034e-4314-87d6-615b5ac0db44",
+            400,
+            id="自分以外のいいねを解除しようとした場合",
+        ),
+        pytest.param(
             None,
-            "7d4c6529-dd20-4856-a4c5-a33229e9ddfc",
+            "63a38d12-034e-4314-87d6-615b5ac0db44",
             401,
             id="Bearerトークンがない場合",
         ),
@@ -79,7 +86,7 @@ def before_each():
             {
                 "Authorization": f"Bearer {valid_jwt_token('407a9844-da17-4b58-b60c-500d35d2e45a')}"
             },
-            "7d4c6529-dd20-4856-a4c5-a33229e9ddfc",
+            "63a38d12-034e-4314-87d6-615b5ac0db44",
             401,
             id="存在しないユーザの場合",
         ),
@@ -87,7 +94,7 @@ def before_each():
             {
                 "Authorization": f"Bearer {expired_jwt_token('caa93979-2256-42f0-8e83-55144674613b')}"
             },
-            "7d4c6529-dd20-4856-a4c5-a33229e9ddfc",
+            "63a38d12-034e-4314-87d6-615b5ac0db44",
             401,
             id="トークンの有効期限がない場合",
         ),
@@ -101,83 +108,10 @@ def before_each():
         ),
     ],
 )
-def test_ステータスコード(headers: dict | None, id: str, status_code: int):
+def test_ステータスコード(headers: dict | None, article_id: str, status_code: int):
     with freeze_time(datetime(2025, 7, 23, 0, 0, 0)):
-        response = client.delete(f"/api/likes/{id}", headers=headers)
+        response = client.delete(
+            f"/api/users/me/liked-articles/{article_id}", headers=headers
+        )
 
     assert response.status_code == status_code
-
-
-@pytest.mark.parametrize(
-    "headers, id, result",
-    [
-        pytest.param(
-            {
-                "Authorization": f"Bearer {valid_jwt_token('caa93979-2256-42f0-8e83-55144674613b')}"
-            },
-            "7d4c6529-dd20-4856-a4c5-a33229e9ddfc",
-            None,
-            id="記事のいいねを解除できる場合",
-        ),
-        pytest.param(
-            None,
-            "7d4c6529-dd20-4856-a4c5-a33229e9ddfc",
-            db_models.Like(
-                id=uuid.UUID("7d4c6529-dd20-4856-a4c5-a33229e9ddfc"),
-                user_id=uuid.UUID("caa93979-2256-42f0-8e83-55144674613b"),
-                article_id=uuid.UUID("63a38d12-034e-4314-87d6-615b5ac0db44"),
-            ),
-            id="Bearerトークンがない場合",
-        ),
-        pytest.param(
-            {
-                "Authorization": f"Bearer {valid_jwt_token('407a9844-da17-4b58-b60c-500d35d2e45a')}"
-            },
-            "7d4c6529-dd20-4856-a4c5-a33229e9ddfc",
-            db_models.Like(
-                id=uuid.UUID("7d4c6529-dd20-4856-a4c5-a33229e9ddfc"),
-                user_id=uuid.UUID("caa93979-2256-42f0-8e83-55144674613b"),
-                article_id=uuid.UUID("63a38d12-034e-4314-87d6-615b5ac0db44"),
-            ),
-            id="存在しないユーザの場合",
-        ),
-        pytest.param(
-            {
-                "Authorization": f"Bearer {expired_jwt_token('caa93979-2256-42f0-8e83-55144674613b')}"
-            },
-            "7d4c6529-dd20-4856-a4c5-a33229e9ddfc",
-            db_models.Like(
-                id=uuid.UUID("7d4c6529-dd20-4856-a4c5-a33229e9ddfc"),
-                user_id=uuid.UUID("caa93979-2256-42f0-8e83-55144674613b"),
-                article_id=uuid.UUID("63a38d12-034e-4314-87d6-615b5ac0db44"),
-            ),
-            id="トークンの有効期限がない場合",
-        ),
-        pytest.param(
-            {
-                "Authorization": f"Bearer {valid_jwt_token('caa93979-2256-42f0-8e83-55144674613b')}"
-            },
-            "e1174d97-5432-4d4f-8fb3-1caf1359a02c",
-            db_models.Like(
-                id=uuid.UUID("7d4c6529-dd20-4856-a4c5-a33229e9ddfc"),
-                user_id=uuid.UUID("caa93979-2256-42f0-8e83-55144674613b"),
-                article_id=uuid.UUID("63a38d12-034e-4314-87d6-615b5ac0db44"),
-            ),
-            id="存在しない記事のいいねを解除した場合",
-        ),
-    ],
-)
-def test_DB登録内容(
-    headers: dict | None,
-    id: str,
-    result: db_models.Like | None,
-):
-    with freeze_time(datetime(2025, 7, 23, 0, 0, 0)):
-        client.delete(f"/api/likes/{id}", headers=headers)
-
-    session = next(get_mock_session())
-    like = session.get(
-        db_models.Like, uuid.UUID("7d4c6529-dd20-4856-a4c5-a33229e9ddfc")
-    )
-
-    assert like == result

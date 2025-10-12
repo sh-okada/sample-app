@@ -6,7 +6,6 @@ from app.infrastructure.db.postgres import create_db_and_tables
 from app.interface.router import (
     articles_router,
     auth_router,
-    likes_router,
     users_router,
 )
 
@@ -24,6 +23,5 @@ api_router = APIRouter(prefix="/api")
 api_router.include_router(auth_router.router)
 api_router.include_router(users_router.router)
 api_router.include_router(articles_router.router)
-api_router.include_router(likes_router.router)
 
 app.include_router(api_router)
