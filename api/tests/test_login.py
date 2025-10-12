@@ -24,7 +24,7 @@ client = TestClient(app)
                 "username": "sh-okada",
                 "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1ZTM4NjhjZC0zZWMwLTRmODYtOWE5NC04NDM2M2M2NGRhMjkiLCJleHAiOjE3NTMyMzA2MDB9.cTPZJnsl44nXmY9dfDS7mOc1s11mjCenmdy14FH_wzg",
             },
-            id="ユーザー名とパスワードでログインできること",
+            id="ユーザー名とパスワードの組み合わせが正しい場合、ログインできること",
         ),
         pytest.param(
             "bad-user",
