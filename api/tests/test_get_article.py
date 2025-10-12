@@ -13,7 +13,7 @@ client = TestClient(app)
 
 
 @pytest.mark.parametrize(
-    "article_id, status_code, json_response",
+    "id, status_code, json_response",
     [
         pytest.param(
             "63a38d12-034e-4314-87d6-615b5ac0db44",
@@ -38,7 +38,7 @@ client = TestClient(app)
         ),
     ],
 )
-def test_レスポンス(article_id: uuid.UUID, status_code: int, json_response: dict):
+def test_レスポンス(id: uuid.UUID, status_code: int, json_response: dict):
     user = db_models.User(
         id=uuid.UUID("caa93979-2256-42f0-8e83-55144674613b"),
         name="sh-okada",
@@ -57,7 +57,7 @@ def test_レスポンス(article_id: uuid.UUID, status_code: int, json_response:
     session.commit()
 
     with freeze_time(datetime(2025, 7, 23, 0, 0, 0)):
-        response = client.get(f"/api/articles/{article_id}")
+        response = client.get(f"/api/articles/{id}")
 
     assert response.status_code == status_code
     assert response.json() == json_response

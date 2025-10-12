@@ -14,7 +14,7 @@ client = TestClient(app)
 
 
 @pytest.mark.parametrize(
-    "headers, article_id, status_code, json_response",
+    "headers, id, status_code, json_response",
     [
         pytest.param(
             {
@@ -78,7 +78,7 @@ client = TestClient(app)
     ],
 )
 def test_レスポンス(
-    headers: dict | None, article_id: str, status_code: int, json_response: dict
+    headers: dict | None, id: str, status_code: int, json_response: dict
 ):
     users = [
         db_models.User(
@@ -122,9 +122,7 @@ def test_レスポンス(
     session.commit()
 
     with freeze_time(datetime(2025, 7, 23, 0, 0, 0)):
-        response = client.delete(
-            f"/api/users/me/liked-articles/{article_id}", headers=headers
-        )
+        response = client.delete(f"/api/users/me/liked-articles/{id}", headers=headers)
 
     assert response.status_code == status_code
     assert response.json() == json_response

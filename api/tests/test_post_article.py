@@ -16,19 +16,6 @@ from tests.conftest import (
 client = TestClient(app)
 
 
-@pytest.fixture(autouse=True)
-def before_each():
-    user = db_models.User(
-        id=uuid.UUID("caa93979-2256-42f0-8e83-55144674613b"),
-        name="sh-okada",
-        password="$2b$12$ypi5a45bRgKPo4ZJk2IvQeqKJLlfpmGGwL9Pu9i/rEs2Pa0y7SywS",
-    )
-
-    session = next(get_mock_session())
-    session.add(user)
-    session.commit()
-
-
 @pytest.mark.parametrize(
     "headers, request_body, status_code, json_response",
     [
@@ -78,6 +65,16 @@ def before_each():
 def test_レスポンス(
     headers: dict | None, request_body: dict, status_code: int, json_response: dict
 ):
+    user = db_models.User(
+        id=uuid.UUID("caa93979-2256-42f0-8e83-55144674613b"),
+        name="sh-okada",
+        password="$2b$12$ypi5a45bRgKPo4ZJk2IvQeqKJLlfpmGGwL9Pu9i/rEs2Pa0y7SywS",
+    )
+
+    session = next(get_mock_session())
+    session.add(user)
+    session.commit()
+
     with freeze_time(datetime(2025, 7, 23, 0, 0, 0)):
         response = client.post("/api/articles", headers=headers, json=request_body)
 
