@@ -20,65 +20,65 @@ client = TestClient(app)
             {
                 "Authorization": f"Bearer {valid_jwt_token('caa93979-2256-42f0-8e83-55144674613b')}"
             },
-            "63a38d12-034e-4314-87d6-615b5ac0db44",
+            "f3869b72-1f0a-433a-96b0-d9b934234936",
             200,
-            {"detail": "article unliked successfully."},
-            id="自分のいいねを解除できること",
-        ),
-        pytest.param(
             {
-                "Authorization": f"Bearer {valid_jwt_token('2a7680c3-ad35-4734-93ac-b7c088c86a53')}"
+                "id": "f3869b72-1f0a-433a-96b0-d9b934234936",
+                "title": "記事2",
+                "text": "# Hello World",
+                "published_at": "2025-07-23T00:00:00",
+                "user": {
+                    "id": "2a7680c3-ad35-4734-93ac-b7c088c86a53",
+                    "name": "ec-okada",
+                },
             },
-            "63a38d12-034e-4314-87d6-615b5ac0db44",
-            400,
-            {"detail": "Have not liked this article."},
-            id="自分以外のいいねは解除できないこと",
+            id="idと一致するいいねした記事が取得できること",
         ),
         pytest.param(
             None,
-            "63a38d12-034e-4314-87d6-615b5ac0db44",
+            "f3869b72-1f0a-433a-96b0-d9b934234936",
             401,
             {"detail": "Not authenticated"},
-            id="JWTがない状態でいいねの解除ができないこと",
+            id="JWTがない状態でいいねした記事を取得できないこと",
         ),
         pytest.param(
             {"Authorization": "Bearer invalid-token"},
-            "63a38d12-034e-4314-87d6-615b5ac0db44",
+            "f3869b72-1f0a-433a-96b0-d9b934234936",
             401,
             {"detail": "Invalid token."},
-            id="不正なJWTではいいねの解除ができないこと",
+            id="不正なJWTではいいねした記事が取得できないこと",
         ),
         pytest.param(
             {
                 "Authorization": f"Bearer {valid_jwt_token('407a9844-da17-4b58-b60c-500d35d2e45a')}"
             },
-            "63a38d12-034e-4314-87d6-615b5ac0db44",
+            "f3869b72-1f0a-433a-96b0-d9b934234936",
             401,
             {"detail": "User not found."},
-            id="存在しないユーザーのJWTでいいねの解除ができないこと",
+            id="存在しないユーザーのJWTではいいねした記事が取得できないこと",
         ),
         pytest.param(
             {
                 "Authorization": f"Bearer {expired_jwt_token('caa93979-2256-42f0-8e83-55144674613b')}"
             },
-            "63a38d12-034e-4314-87d6-615b5ac0db44",
+            "f3869b72-1f0a-433a-96b0-d9b934234936",
             401,
             {"detail": "Token has expired."},
-            id="JWTの有効期限が切れた状態でいいねの解除ができないこと",
+            id="有効期限切れのJWTではいいねした記事が取得できないこと",
         ),
         pytest.param(
             {
                 "Authorization": f"Bearer {valid_jwt_token('caa93979-2256-42f0-8e83-55144674613b')}"
             },
-            "e1174d97-5432-4d4f-8fb3-1caf1359a02c",
+            "e88e396b-d6fa-4660-a5a6-a5af0f2638be",
             404,
-            {"detail": "Article not found."},
-            id="存在しない記事のいいねの解除ができないこと",
+            {"detail": "Liked article not found."},
+            id="idと一致する記事がない場合は404エラーになること",
         ),
     ],
 )
 def test_レスポンス(
-    headers: dict | None, id: str, status_code: int, json_response: dict
+    headers: dict | None, id: uuid.UUID, status_code: int, json_response: dict
 ):
     users = [
         db_models.User(
@@ -92,7 +92,6 @@ def test_レスポンス(
             password="$2b$12$ypi5a45bRgKPo4ZJk2IvQeqKJLlfpmGGwL9Pu9i/rEs2Pa0y7SywS",
         ),
     ]
-
     articles = [
         db_models.Article(
             id=uuid.UUID("63a38d12-034e-4314-87d6-615b5ac0db44"),
@@ -109,12 +108,11 @@ def test_レスポンス(
             user_id=uuid.UUID("2a7680c3-ad35-4734-93ac-b7c088c86a53"),
         ),
     ]
-
     like_articles = [
         db_models.Like(
             user_id=uuid.UUID("caa93979-2256-42f0-8e83-55144674613b"),
-            article_id=uuid.UUID("63a38d12-034e-4314-87d6-615b5ac0db44"),
-        ),
+            article_id=uuid.UUID("f3869b72-1f0a-433a-96b0-d9b934234936"),
+        )
     ]
 
     session = next(get_mock_session())
@@ -122,7 +120,7 @@ def test_レスポンス(
     session.commit()
 
     with freeze_time(datetime(2025, 7, 23, 0, 0, 0)):
-        response = client.delete(f"/api/users/me/liked-articles/{id}", headers=headers)
+        response = client.get(f"/api/users/me/liked-article/{id}", headers=headers)
 
     assert response.status_code == status_code
     assert response.json() == json_response

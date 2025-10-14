@@ -117,7 +117,7 @@ def test_レスポンス(
             id=uuid.UUID("f3869b72-1f0a-433a-96b0-d9b934234936"),
             title="記事2",
             text="# Hello World",
-            published_at=datetime(2025, 7, 23, 2, 0, 0),
+            published_at=datetime(2025, 7, 23, 0, 0, 0),
             user_id=uuid.UUID("2a7680c3-ad35-4734-93ac-b7c088c86a53"),
         ),
     ]

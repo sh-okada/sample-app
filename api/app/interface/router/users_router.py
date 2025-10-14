@@ -1,4 +1,5 @@
 from fastapi import APIRouter, HTTPException, status
+from sqlmodel import and_, select
 
 from app.domain.exceptions import (
     ArticleAlreadyLikedError,
@@ -7,6 +8,8 @@ from app.domain.exceptions import (
 )
 from app.domain.repository.article_repository import ArticleRepositoryDep
 from app.domain.repository.user_repository import UserRepositoryDep
+from app.infrastructure.db import db_models
+from app.infrastructure.db.postgres import SessionDep
 from app.interface import requests, responses
 from app.shared import pydantic_fields
 from app.shared.oauth2 import CurrentUserDep
@@ -19,6 +22,35 @@ def read_users_me(
     current_user: CurrentUserDep,
 ) -> responses.User:
     return current_user
+
+
+@router.get("/me/liked-article/{id}", response_model=responses.Article)
+def get_liked_article(
+    id: pydantic_fields.ArticleId,
+    session: SessionDep,
+    current_user: CurrentUserDep,
+) -> responses.Article:
+    statement = select(db_models.Like).where(
+        and_(
+            db_models.Like.user_id == current_user.id,
+            db_models.Like.article_id == id,
+        )
+    )
+    liked_article = session.exec(statement).one_or_none()
+    if not liked_article:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="Liked article not found."
+        )
+
+    return responses.Article(
+        id=liked_article.article.id,
+        title=liked_article.article.title,
+        text=liked_article.article.text,
+        published_at=liked_article.article.published_at,
+        user=responses.User(
+            id=liked_article.article.user.id, name=liked_article.article.user.name
+        ),
+    )
 
 
 @router.post("/me/liked-articles", response_model=responses.Message)
