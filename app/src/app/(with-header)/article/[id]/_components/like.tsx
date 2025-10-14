@@ -1,7 +1,7 @@
 import { getArticle } from "@/api/articles";
 import { getLikedArticle } from "@/api/users";
 import { LikeButton } from "@/app/(with-header)/article/[id]/_components/like-button";
-import { UnLikeButton } from "@/app/(with-header)/article/[id]/_components/unlike-button";
+import { UnlikeButton } from "@/app/(with-header)/article/[id]/_components/unlike-button";
 import { auth } from "@/lib/auth";
 import { isNotFoundError } from "@/lib/axios";
 
@@ -31,7 +31,7 @@ export const Like = async ({ articleId }: LikeProps) => {
     });
 
   return liked ? (
-    <UnLikeButton articleId={articleId} />
+    <UnlikeButton articleId={articleId} />
   ) : (
     <LikeButton articleId={articleId} />
   );

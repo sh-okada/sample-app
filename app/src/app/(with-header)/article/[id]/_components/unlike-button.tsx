@@ -7,11 +7,11 @@ import { unlike } from "@/app/(with-header)/article/[id]/action";
 import { Button } from "@/components/core/button";
 import { Input } from "@/components/core/input";
 
-export type UnLikeButtonProps = {
+export type UnlikeButtonProps = {
   articleId: string;
 };
 
-export const UnLikeButton = ({ articleId }: UnLikeButtonProps) => {
+export const UnlikeButton = ({ articleId }: UnlikeButtonProps) => {
   const [_lastResult, action] = useActionState(unlike, null);
   const [form, fields] = useForm({
     defaultValue: { articleId },
