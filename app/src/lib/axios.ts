@@ -39,6 +39,10 @@ export const isUnAuthorizedError = (error: unknown) => {
   return axios.isAxiosError(error) && error.response?.status === 401;
 };
 
+export const isNotFoundError = (error: unknown) => {
+  return axios.isAxiosError(error) && error.response?.status === 404;
+};
+
 export const isConflictError = (error: unknown) => {
   return axios.isAxiosError(error) && error.response?.status === 409;
 };

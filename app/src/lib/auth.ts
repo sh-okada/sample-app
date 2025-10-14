@@ -18,7 +18,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         const res = (await login(loginFormData)).data;
 
         return {
-          id: res.userId,
+          id: res.id,
           name: res.username,
           accessToken: res.accessToken,
         };
@@ -45,14 +45,13 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         token.name = user.name;
         token.accessToken = user.accessToken;
       }
+
       return token;
     },
     session: async ({ session, token }) => {
-      if (token.sub) {
-        session.user.id = token.sub;
-        session.user.name = token.name;
-        session.user.accessToken = String(token.accessToken);
-      }
+      session.user.id = token.sub;
+      session.user.name = token.name;
+      session.user.accessToken = token.accessToken;
 
       return session;
     },

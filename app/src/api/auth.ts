@@ -3,7 +3,7 @@ import { axiosInstance } from "@/lib/axios";
 import type { loginSchema, signUpSchema } from "@/lib/zod/schema";
 
 export type LoginResponse = {
-  userId: string;
+  id: string;
   username: string;
   accessToken: string;
 };

@@ -1,18 +1,26 @@
+/** biome-ignore-all lint/correctness/noUnusedImports: <> */
 import type { DefaultSession } from "next-auth";
+import { JWT } from "next-auth/jwt";
 
 declare module "next-auth" {
   interface Session {
     user: {
-      accessToken?: string;
+      id: string;
+      name: string;
+      accessToken: string;
     } & DefaultSession["user"];
   }
   interface User {
-    accessToken?: string;
+    id: string;
+    name: string;
+    accessToken: string;
   }
 }
 
 declare module "next-auth/jwt" {
   interface JWT {
-    accessToken?: string;
+    sub: string;
+    name: string;
+    accessToken: string;
   }
 }

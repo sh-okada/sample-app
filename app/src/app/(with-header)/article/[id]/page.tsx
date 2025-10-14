@@ -1,5 +1,6 @@
 import { Suspense } from "react";
 import { Article } from "@/app/(with-header)/article/[id]/_components/article";
+import { Feedback } from "@/app/(with-header)/article/[id]/_components/feedback";
 import { PageFrame } from "@/components/ui-parts/page-frame";
 import { Spinner } from "@/components/ui-parts/spinner";
 
@@ -17,6 +18,7 @@ export default async function Page({ params }: PageProps) {
           <Article id={id}>
             {(title) => <PageFrame.Title>{title}</PageFrame.Title>}
           </Article>
+          <Feedback articleId={id} />
         </Suspense>
       </PageFrame.Content>
     </PageFrame>

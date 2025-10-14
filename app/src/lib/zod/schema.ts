@@ -45,3 +45,11 @@ export const searchArticleSchema = z.object({
     .string({ message: message.required("検索ワード") })
     .max(100, { message: message.max("検索ワード", 100) }),
 });
+
+export const likeArticleSchema = z.object({
+  articleId: z.string(),
+});
+
+export const unlikeArticleSchema = z.object({
+  articleId: z.string(),
+});
