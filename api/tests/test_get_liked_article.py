@@ -120,7 +120,7 @@ def test_レスポンス(
     session.commit()
 
     with freeze_time(datetime(2025, 7, 23, 0, 0, 0)):
-        response = client.get(f"/api/users/me/liked-article/{id}", headers=headers)
+        response = client.get(f"/api/users/me/liked-articles/{id}", headers=headers)
 
     assert response.status_code == status_code
     assert response.json() == json_response

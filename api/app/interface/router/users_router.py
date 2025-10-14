@@ -24,7 +24,7 @@ def read_users_me(
     return current_user
 
 
-@router.get("/me/liked-article/{id}", response_model=responses.Article)
+@router.get("/me/liked-articles/{id}", response_model=responses.Article)
 def get_liked_article(
     id: pydantic_fields.ArticleId,
     session: SessionDep,
