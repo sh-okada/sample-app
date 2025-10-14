@@ -1,6 +1,6 @@
 {
   "name": "app",
-  "dockerComposeFile": "docker-compose.yaml",
+  "dockerComposeFile": "../docker-compose.yaml",
   "service": "app",
   "workspaceFolder": "/workspace/app",
   "forwardPorts": [3000],

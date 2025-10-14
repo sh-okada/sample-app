@@ -1,9 +1,28 @@
 services:
+  app:
+    platform: linux/amd64
+    container_name: app
+    build:
+      context: ./app/
+      dockerfile: Dockerfile
+    tty: true
+    ports:
+      - 3000:3000
+    volumes:
+      - ./:/workspace
+      - /workspace/app/node_modules
+      - /workspace/app/.next
+      - /workspace/app/.swc
+    environment:
+      TZ: Asia/Tokyo
+      AUTH_SECRET: "cEPKRUHbWS2ylvvhPc+Mdbr1pPAmt1Ky0qxJVGdhXp0="
+      API_URL: "http://api:8000/api"
+
   api:
     platform: linux/amd64
     container_name: api
     build:
-      context: .
+      context: ./api/
       dockerfile: Dockerfile.api
     depends_on:
       - postgres
@@ -11,7 +30,7 @@ services:
     ports:
       - 8000:8000
     volumes:
-      - ../:/workspace
+      - ./:/workspace
       - /workspace/api/.venv
     environment:
       TZ: Asia/Tokyo
@@ -29,7 +48,7 @@ services:
     platform: linux/amd64
     container_name: postgres
     build:
-      context: .
+      context: ./api/
       dockerfile: Dockerfile.database
     ports:
       - 5432:5432
