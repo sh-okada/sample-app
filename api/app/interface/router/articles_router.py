@@ -21,7 +21,6 @@ def get_articles(
     return queries.get_articles_with_pagination(
         session=session,
         article_filter_params=article_filter_query,
-        where_clauses=[],
     )
 
 
