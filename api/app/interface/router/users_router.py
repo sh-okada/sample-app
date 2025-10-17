@@ -10,7 +10,7 @@ from app.domain.repository.article_repository import ArticleRepositoryDep
 from app.domain.repository.user_repository import UserRepositoryDep
 from app.infrastructure.db import db_models
 from app.infrastructure.db.postgres import SessionDep
-from app.interface import requests, responses
+from app.interface import queries, requests, responses
 from app.shared import pydantic_fields
 from app.shared.oauth2 import CurrentUserDep
 
@@ -22,6 +22,19 @@ def read_users_me(
     current_user: CurrentUserDep,
 ) -> responses.User:
     return current_user
+
+
+@router.get("/me/articles", response_model=responses.Articles)
+def get_my_articles(
+    article_filter_query: requests.ArticleFilterQuery,
+    session: SessionDep,
+    current_user: CurrentUserDep,
+) -> responses.Articles:
+    return queries.get_articles_with_pagination(
+        session=session,
+        article_filter_params=article_filter_query,
+        where_clauses=[db_models.Article.user_id == current_user.id],
+    )
 
 
 @router.get("/me/liked-articles/{id}", response_model=responses.Article)

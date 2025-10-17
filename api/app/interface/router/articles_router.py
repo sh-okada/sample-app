@@ -2,13 +2,12 @@ from fastapi import APIRouter, HTTPException, status
 from fastapi.encoders import jsonable_encoder
 from fastapi.responses import JSONResponse
 from pydantic import UUID4
-from sqlmodel import desc, func, select
 
 from app.domain.entity.article import Article
 from app.domain.repository.article_repository import ArticleRepositoryDep
 from app.infrastructure.db import db_models
 from app.infrastructure.db.postgres import SessionDep
-from app.interface import requests, responses
+from app.interface import queries, requests, responses
 from app.shared.oauth2 import CurrentUserDep
 
 router = APIRouter(prefix="/articles", tags=["articles"])
@@ -19,46 +18,10 @@ def get_articles(
     article_filter_query: requests.ArticleFilterQuery,
     session: SessionDep,
 ) -> responses.Articles:
-    # 空文字検索はパフォーマンスを低下させる可能性があるため、キーワードが指定された場合のみフィルターにかける
-    search_query = (
-        [db_models.Article.title.contains(article_filter_query.q)]
-        if article_filter_query.q
-        else []
-    )
-
-    offset = (article_filter_query.page - 1) * article_filter_query.limit
-    statement = (
-        select(db_models.Article)
-        .where(*search_query)
-        .order_by(desc(db_models.Article.published_at))
-        .offset(offset)
-        .limit(article_filter_query.limit)
-    )
-    articles = session.exec(statement).all()
-
-    count = session.exec(
-        select(func.count(db_models.Article.id)).where(*search_query)
-    ).one()
-
-    total_pages = (
-        (count + article_filter_query.limit - 1) // article_filter_query.limit
-        if count > 0
-        else 0
-    )
-
-    return responses.Articles(
-        values=[
-            responses.Article(
-                id=article.id,
-                title=article.title,
-                text=article.text,
-                published_at=article.published_at,
-                user=responses.User(id=article.user.id, name=article.user.name),
-            )
-            for article in articles
-        ],
-        count=count,
-        total_pages=total_pages,
+    return queries.get_articles_with_pagination(
+        session=session,
+        article_filter_params=article_filter_query,
+        where_clauses=[],
     )
 
 
