@@ -37,6 +37,26 @@ def get_my_articles(
     )
 
 
+@router.get("/{id}/articles", response_model=responses.Articles)
+def get_articles_by_user_id(
+    id: pydantic_fields.UserId,
+    article_filter_query: requests.ArticleFilterQuery,
+    user_repository: UserRepositoryDep,
+    session: SessionDep,
+) -> responses.Articles:
+    user = user_repository.find_by_id(id)
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="User not found."
+        )
+
+    return queries.get_articles_with_pagination(
+        session=session,
+        article_filter_params=article_filter_query,
+        where_clauses=[db_models.Article.user_id == id],
+    )
+
+
 @router.get("/me/liked-articles/{id}", response_model=responses.Article)
 def get_liked_article(
     id: pydantic_fields.ArticleId,
