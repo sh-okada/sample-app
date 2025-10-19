@@ -53,7 +53,7 @@ def get_articles_by_user_id(
     return queries.get_articles_with_pagination(
         session=session,
         article_filter_params=article_filter_query,
-        where_clauses=[db_models.Article.user_id == id],
+        where_clauses=[db_models.Article.user_id == user.id],
     )
 
 
