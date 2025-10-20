@@ -8,6 +8,7 @@ export const axiosInstance = applyCaseMiddleware(
     headers: {
       "Content-Type": "application/json",
     },
+    adapter: "fetch",
   }),
 );
 
