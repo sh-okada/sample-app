@@ -7,7 +7,8 @@ WORKDIR /workspace/app
 COPY ./package.json ./
 COPY ./package-lock.json ./
 
-RUN npm install
+RUN npm install && \
+    npx playwright install --with-deps
 
 COPY ./src ./src
 COPY ./public ./public
