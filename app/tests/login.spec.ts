@@ -6,6 +6,7 @@ test("ユーザー名とパスワードが正しい場合、ログインでき�
   mockServerRequest,
 }) => {
   await mockServerRequest.POST("http://api:8000/api/auth/login", {
+    status: 200,
     body: {
       id: "c36feca1-ef32-46cc-9df4-3c0eeb698251",
       username: "sh-okada",
@@ -13,6 +14,7 @@ test("ユーザー名とパスワードが正しい場合、ログインでき�
     },
   });
   await mockServerRequest.GET("http://api:8000/api/articles", {
+    status: 200,
     body: {
       values: [],
       count: 0,
@@ -22,7 +24,7 @@ test("ユーザー名とパスワードが正しい場合、ログインでき�
 
   await page.goto("/login");
   await page.getByTestId("username-input").fill("sh-okada");
-  await page.getByTestId("password-input").fill("password");
+  await page.getByTestId("password-input").fill("Password123");
   await page.getByTestId("login-button").click();
   await page.waitForURL("/");
 
@@ -42,7 +44,7 @@ test("ユーザー名またはパスワードが間違っている場合、エ�
 
   await page.goto("/login");
   await page.getByTestId("username-input").fill("sh-okada");
-  await page.getByTestId("password-input").fill("password");
+  await page.getByTestId("password-input").fill("Password123");
   await page.getByTestId("login-button").click();
 
   await expect(
