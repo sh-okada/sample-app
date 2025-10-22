@@ -26,7 +26,7 @@ export const getArticle = async (id: string) =>
 
 export const getArticles = async (page: number, q: string) =>
   axiosInstance.get<ArticlesResponse>("/articles", {
-    params: { page: page, q: q, limit: 5 },
+    params: { page: page, limit: 5, q: q },
   });
 
 export const postArticle = async (data: PostArticleRequest) =>
