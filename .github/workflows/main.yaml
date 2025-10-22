@@ -16,11 +16,13 @@ jobs:
           node-version: 22
       - name: Install Playwright dependencies
         run: npx playwright install --with-deps
+        working-directory: ./app
       - name: Install dependencies
         run: npm i
         working-directory: ./app
       - name: Run unit tests
         run: npm run test
+        working-directory: ./app
 
   pytest:
     runs-on: ubuntu-latest
