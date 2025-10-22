@@ -9,6 +9,9 @@ on:
 jobs:
   app-unit-tests:
     runs-on: ubuntu-latest
+    env:
+      AUTH_SECRET: cEPKRUHbWS2ylvvhPc+Mdbr1pPAmt1Ky0qxJVGdhXp0=
+      API_URL: http://api:8000/api
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v6
