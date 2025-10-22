@@ -2,7 +2,7 @@ import { defineConfig, devices } from "@playwright/test";
 
 export default defineConfig({
   testDir: "./tests",
-  reporter: "html",
+  reporter: [["html", { host: "0.0.0.0", port: "9323" }]],
   quiet: true,
   workers: 1,
   use: {
