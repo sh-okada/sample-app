@@ -7,24 +7,24 @@ on:
       - main
 
 jobs:
-  jest:
+  app-unit-tests:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v6
         with:
           node-version: 22
-      - name: Install Playwright dependencies
-        run: npx playwright install --with-deps
-        working-directory: ./app
       - name: Install dependencies
         run: npm i
+        working-directory: ./app
+      - name: Install Playwright dependencies
+        run: npx playwright install --with-deps
         working-directory: ./app
       - name: Run unit tests
         run: npm run test
         working-directory: ./app
 
-  pytest:
+  api-unit-tests:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -32,6 +32,6 @@ jobs:
       - name: Install dependencies
         run: uv sync --frozen
         working-directory: ./api
-      - name: Run pytest
+      - name: Run unit tests
         run: uv run pytest
         working-directory: ./api
