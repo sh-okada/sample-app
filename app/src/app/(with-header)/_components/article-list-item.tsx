@@ -18,7 +18,10 @@ export const ArticleListItem = ({ article }: ArticleListItemProps) => {
   return (
     <div className="py-2">
       <Link asChild>
-        <InternalLink href={paths.article.id.getHref(article.id)}>
+        <InternalLink
+          data-testid="article-title"
+          href={paths.article.id.getHref(article.id)}
+        >
           {article.title}
         </InternalLink>
       </Link>

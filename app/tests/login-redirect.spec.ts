@@ -20,7 +20,7 @@ test.beforeEach(async ({ mockServerRequest }) => {
   });
 });
 
-test("callbackUrlクエリパラメータがある場合、callbackUrlにリダイレクトされる", async ({
+test("callbackUrlクエリパラメータがある場合、callbackUrlにリダイレクトされること", async ({
   page,
 }) => {
   await page.goto("/login?callbackUrl=/article/post");
@@ -32,7 +32,7 @@ test("callbackUrlクエリパラメータがある場合、callbackUrlにリダ�
   expect(page.url()).toBe("http://localhost:3000/article/post");
 });
 
-test("callbackUrlクエリパラメータがない場合、トップページに遷移する", async ({
+test("callbackUrlクエリパラメータがない場合、トップページに遷移すること", async ({
   page,
 }) => {
   await page.goto("/login");

@@ -1,7 +1,20 @@
 import { expect } from "@playwright/test";
 import { test } from "./fixtures";
 
-test("使用されていないユーザー名の場合、登録できる", async ({
+test("ユーザー名が1文字以下の場合、エラーメッセージが表示されること", async ({
+  page,
+}) => {
+  await page.goto("/signup");
+  await page.waitForSelector('[data-testid="username-input"]');
+  await page.getByTestId("username-input").fill("a");
+  await page.getByTestId("password-input").focus();
+
+  expect(
+    page.getByText("ユーザー名は2文字以上で入力してください。"),
+  ).toBeVisible();
+});
+
+test("使用されていないユーザー名の場合、ユーザー登録できること", async ({
   page,
   mockServerRequest,
 }) => {
@@ -21,7 +34,7 @@ test("使用されていないユーザー名の場合、登録できる", async
   expect(page.url()).toBe("http://localhost:3000/login");
 });
 
-test("使用されているユーザー名の場合、エラーメッセージが表示される", async ({
+test("使用されているユーザー名の場合、エラーメッセージが表示されること", async ({
   page,
   mockServerRequest,
 }) => {
