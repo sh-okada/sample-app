@@ -26,9 +26,8 @@ test("ユーザー名とパスワードが正しい場合、ログインでき�
   await page.getByTestId("username-input").fill("sh-okada");
   await page.getByTestId("password-input").fill("Password123");
   await page.getByTestId("login-button").click();
-  await page.waitForURL("/");
 
-  expect(page.url()).toBe("http://localhost:3000/");
+  await expect(page).toHaveURL("/");
 });
 
 test("ユーザー名またはパスワードが間違っている場合、エラーメッセージが表示されること", async ({
@@ -47,7 +46,7 @@ test("ユーザー名またはパスワードが間違っている場合、エ�
   await page.getByTestId("password-input").fill("Password123");
   await page.getByTestId("login-button").click();
 
-  await expect(
-    page.getByText("ユーザ名またはパスワードが間違っています。"),
-  ).toBeVisible();
+  await expect(page.getByTestId("error-text")).toHaveText(
+    "ユーザー名またはパスワードが間違っています。",
+  );
 });

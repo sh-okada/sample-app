@@ -27,9 +27,8 @@ test("callbackUrlクエリパラメータがある場合、callbackUrlにリダ�
   await page.getByTestId("username-input").fill("sh-okada");
   await page.getByTestId("password-input").fill("Password123");
   await page.getByTestId("login-button").click();
-  await page.waitForURL("/article/post");
 
-  expect(page.url()).toBe("http://localhost:3000/article/post");
+  await expect(page).toHaveURL("/article/post");
 });
 
 test("callbackUrlクエリパラメータがない場合、トップページに遷移すること", async ({
@@ -39,7 +38,6 @@ test("callbackUrlクエリパラメータがない場合、トップページに
   await page.getByTestId("username-input").fill("sh-okada");
   await page.getByTestId("password-input").fill("Password123");
   await page.getByTestId("login-button").click();
-  await page.waitForURL("/");
 
-  expect(page.url()).toBe("http://localhost:3000/");
+  await expect(page).toHaveURL("/");
 });

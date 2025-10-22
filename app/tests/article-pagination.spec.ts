@@ -201,44 +201,34 @@ test.beforeEach(async ({ mockServerRequest }) => {
 test.describe("1/3ページ目の場合", () => {
   test("現在のページが1/3で表示されていること", async ({ page }) => {
     await page.goto("/");
-    await page.waitForSelector('[data-testid="current-page"]');
-    const currentPage = page.getByTestId("current-page");
 
-    await expect(currentPage).toHaveText("1/3");
+    await expect(page.getByTestId("current-page")).toHaveText("1/3");
   });
 
   test("次のページに遷移できること", async ({ page }) => {
     await page.goto("/");
-    await page.waitForSelector('[data-testid="next-page-button"]');
     await page.getByTestId("next-page-button").click();
-    await page.waitForURL("/?page=2");
 
     await expect(page).toHaveURL("/?page=2");
   });
 
   test("最後のページに遷移できること", async ({ page }) => {
     await page.goto("/");
-    await page.waitForSelector('[data-testid="last-page-button"]');
     await page.getByTestId("last-page-button").click();
-    await page.waitForURL("/?page=3");
 
     await expect(page).toHaveURL("/?page=3");
   });
 
   test("前のページに遷移できないこと", async ({ page }) => {
     await page.goto("/");
-    await page.waitForSelector('[data-testid="prev-page-button"]');
     await page.getByTestId("prev-page-button").click();
-    await page.waitForURL("/");
 
     await expect(page).toHaveURL("/");
   });
 
   test("最初のページに遷移できないこと", async ({ page }) => {
     await page.goto("/");
-    await page.waitForSelector('[data-testid="first-page-button"]');
     await page.getByTestId("first-page-button").click();
-    await page.waitForURL("/");
 
     await expect(page).toHaveURL("/");
   });
@@ -247,44 +237,34 @@ test.describe("1/3ページ目の場合", () => {
 test.describe("2/3ページ目の場合", () => {
   test("現在のページが2/3で表示されていること", async ({ page }) => {
     await page.goto("/?page=2");
-    await page.waitForSelector('[data-testid="current-page"]');
-    const currentPage = page.getByTestId("current-page");
 
-    await expect(currentPage).toHaveText("2/3");
+    await expect(page.getByTestId("current-page")).toHaveText("2/3");
   });
 
   test("次のページに遷移できること", async ({ page }) => {
     await page.goto("/?page=2");
-    await page.waitForSelector('[data-testid="next-page-button"]');
     await page.getByTestId("next-page-button").click();
-    await page.waitForURL("/?page=3");
 
     await expect(page).toHaveURL("/?page=3");
   });
 
   test("最後のページに遷移できること", async ({ page }) => {
     await page.goto("/?page=2");
-    await page.waitForSelector('[data-testid="last-page-button"]');
     await page.getByTestId("last-page-button").click();
-    await page.waitForURL("/?page=3");
 
     await expect(page).toHaveURL("/?page=3");
   });
 
   test("前のページに遷移できること", async ({ page }) => {
     await page.goto("/?page=2");
-    await page.waitForSelector('[data-testid="prev-page-button"]');
     await page.getByTestId("prev-page-button").click();
-    await page.waitForURL("/");
 
     await expect(page).toHaveURL("/");
   });
 
   test("最初のページに遷移できること", async ({ page }) => {
     await page.goto("/?page=2");
-    await page.waitForSelector('[data-testid="first-page-button"]');
     await page.getByTestId("first-page-button").click();
-    await page.waitForURL("/");
 
     await expect(page).toHaveURL("/");
   });
@@ -293,44 +273,34 @@ test.describe("2/3ページ目の場合", () => {
 test.describe("3/3ページ目の場合", () => {
   test("現在のページが3/3で表示されていること", async ({ page }) => {
     await page.goto("/?page=3");
-    await page.waitForSelector('[data-testid="current-page"]');
-    const currentPage = page.getByTestId("current-page");
 
-    await expect(currentPage).toHaveText("3/3");
+    await expect(page.getByTestId("current-page")).toHaveText("3/3");
   });
 
   test("次のページに遷移できないこと", async ({ page }) => {
     await page.goto("/?page=3");
-    await page.waitForSelector('[data-testid="next-page-button"]');
     await page.getByTestId("next-page-button").click();
-    await page.waitForURL("/?page=3");
 
     await expect(page).toHaveURL("/?page=3");
   });
 
   test("最後のページに遷移できないこと", async ({ page }) => {
     await page.goto("/?page=3");
-    await page.waitForSelector('[data-testid="last-page-button"]');
     await page.getByTestId("last-page-button").click();
-    await page.waitForURL("/?page=3");
 
     await expect(page).toHaveURL("/?page=3");
   });
 
   test("前のページに遷移できること", async ({ page }) => {
     await page.goto("/?page=3");
-    await page.waitForSelector('[data-testid="prev-page-button"]');
     await page.getByTestId("prev-page-button").click();
-    await page.waitForURL("/?page=2");
 
     await expect(page).toHaveURL("/?page=2");
   });
 
   test("最初のページに遷移できること", async ({ page }) => {
     await page.goto("/?page=3");
-    await page.waitForSelector('[data-testid="first-page-button"]');
     await page.getByTestId("first-page-button").click();
-    await page.waitForURL("/");
 
     await expect(page).toHaveURL("/");
   });
