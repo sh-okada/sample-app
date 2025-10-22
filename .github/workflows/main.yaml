@@ -29,6 +29,15 @@ jobs:
 
   api-unit-tests:
     runs-on: ubuntu-latest
+    env:
+      DB_USER: postgres
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_PASSWORD: password
+      DB_NAME: postgres
+      JWT_SECRET_KEY: 09d25e094faa6ca2556c818166b7a9563b93f7099f6f0f4caa6cf63b88e8d3e7
+      JET_ALGORITHM: HS256
+      JWT_EXPIRE_MINUTES: 30
     steps:
       - uses: actions/checkout@v4
       - uses: astral-sh/setup-uv@v6
