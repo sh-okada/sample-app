@@ -4,6 +4,7 @@ export default defineConfig({
   testDir: "./tests",
   reporter: "html",
   quiet: true,
+  workers: 1,
   use: {
     baseURL: "http://localhost:3000",
     video: "on",
