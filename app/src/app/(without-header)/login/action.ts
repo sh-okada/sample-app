@@ -25,7 +25,7 @@ export async function login(_prevState: unknown, formData: FormData) {
   } catch (error) {
     if (error instanceof AuthError && isBadRequestError(error.cause?.err)) {
       return submission.reply({
-        formErrors: ["ユーザ名またはパスワードが間違っています。"],
+        formErrors: ["ユーザー名またはパスワードが間違っています。"],
       });
     }
     throw error;
