@@ -12,6 +12,10 @@ class SignUp(BaseModel):
     password: pydantic_fields.Password
 
 
+class RefreshToken(BaseModel):
+    refresh_token: pydantic_fields.JWT
+
+
 class PostArticle(BaseModel):
     title: pydantic_fields.ArticleTitle
     text: pydantic_fields.ArticleText

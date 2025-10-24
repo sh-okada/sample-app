@@ -9,8 +9,8 @@ from app.infrastructure.db import db_models
 from app.infrastructure.db.sqlite import get_mock_session
 from app.main import app
 from tests.conftest import (
-    expired_jwt_token,
-    valid_jwt_token,
+    expired_access_token,
+    valid_access_token,
 )
 
 client = TestClient(app)
@@ -21,7 +21,7 @@ client = TestClient(app)
     [
         pytest.param(
             {
-                "Authorization": f"Bearer {valid_jwt_token('caa93979-2256-42f0-8e83-55144674613b')}"
+                "Authorization": f"Bearer {valid_access_token('caa93979-2256-42f0-8e83-55144674613b')}"
             },
             {"title": "タイトル", "text": "テキスト"},
             201,
@@ -44,7 +44,7 @@ client = TestClient(app)
         ),
         pytest.param(
             {
-                "Authorization": f"Bearer {valid_jwt_token('407a9844-da17-4b58-b60c-500d35d2e45a')}"
+                "Authorization": f"Bearer {valid_access_token('407a9844-da17-4b58-b60c-500d35d2e45a')}"
             },
             {"title": "タイトル", "text": "テキスト"},
             401,
@@ -53,7 +53,7 @@ client = TestClient(app)
         ),
         pytest.param(
             {
-                "Authorization": f"Bearer {expired_jwt_token('caa93979-2256-42f0-8e83-55144674613b')}"
+                "Authorization": f"Bearer {expired_access_token('caa93979-2256-42f0-8e83-55144674613b')}"
             },
             {"title": "タイトル", "text": "テキスト"},
             401,

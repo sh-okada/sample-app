@@ -8,7 +8,7 @@ from freezegun import freeze_time
 from app.infrastructure.db import db_models
 from app.infrastructure.db.sqlite import get_mock_session
 from app.main import app
-from tests.conftest import expired_jwt_token, valid_jwt_token
+from tests.conftest import expired_access_token, valid_access_token
 
 client = TestClient(app)
 
@@ -18,7 +18,7 @@ client = TestClient(app)
     [
         pytest.param(
             {
-                "Authorization": f"Bearer {valid_jwt_token('caa93979-2256-42f0-8e83-55144674613b')}"
+                "Authorization": f"Bearer {valid_access_token('caa93979-2256-42f0-8e83-55144674613b')}"
             },
             200,
             {
@@ -63,7 +63,7 @@ client = TestClient(app)
         ),
         pytest.param(
             {
-                "Authorization": f"Bearer {valid_jwt_token('407a9844-da17-4b58-b60c-500d35d2e45a')}"
+                "Authorization": f"Bearer {valid_access_token('407a9844-da17-4b58-b60c-500d35d2e45a')}"
             },
             401,
             {"detail": "User not found."},
@@ -71,7 +71,7 @@ client = TestClient(app)
         ),
         pytest.param(
             {
-                "Authorization": f"Bearer {expired_jwt_token('caa93979-2256-42f0-8e83-55144674613b')}"
+                "Authorization": f"Bearer {expired_access_token('caa93979-2256-42f0-8e83-55144674613b')}"
             },
             401,
             {"detail": "Token has expired."},
@@ -132,7 +132,7 @@ def test_レスポンス(headers: dict | None, status_code: int, json_response: 
     [
         pytest.param(
             {
-                "Authorization": f"Bearer {valid_jwt_token('6e2aa5a1-f792-47b8-9393-58fd657e7451')}"
+                "Authorization": f"Bearer {valid_access_token('6e2aa5a1-f792-47b8-9393-58fd657e7451')}"
             },
             {},
             {
@@ -195,7 +195,7 @@ def test_レスポンス(headers: dict | None, status_code: int, json_response: 
         ),
         pytest.param(
             {
-                "Authorization": f"Bearer {valid_jwt_token('6e2aa5a1-f792-47b8-9393-58fd657e7451')}"
+                "Authorization": f"Bearer {valid_access_token('6e2aa5a1-f792-47b8-9393-58fd657e7451')}"
             },
             {"limit": 10},
             {
@@ -268,7 +268,7 @@ def test_レスポンス(headers: dict | None, status_code: int, json_response: 
         ),
         pytest.param(
             {
-                "Authorization": f"Bearer {valid_jwt_token('6e2aa5a1-f792-47b8-9393-58fd657e7451')}"
+                "Authorization": f"Bearer {valid_access_token('6e2aa5a1-f792-47b8-9393-58fd657e7451')}"
             },
             {"page": 2},
             {
@@ -291,7 +291,7 @@ def test_レスポンス(headers: dict | None, status_code: int, json_response: 
         ),
         pytest.param(
             {
-                "Authorization": f"Bearer {valid_jwt_token('6e2aa5a1-f792-47b8-9393-58fd657e7451')}"
+                "Authorization": f"Bearer {valid_access_token('6e2aa5a1-f792-47b8-9393-58fd657e7451')}"
             },
             {"page": 3},
             {
@@ -303,7 +303,7 @@ def test_レスポンス(headers: dict | None, status_code: int, json_response: 
         ),
         pytest.param(
             {
-                "Authorization": f"Bearer {valid_jwt_token('6e2aa5a1-f792-47b8-9393-58fd657e7451')}"
+                "Authorization": f"Bearer {valid_access_token('6e2aa5a1-f792-47b8-9393-58fd657e7451')}"
             },
             {"q": "記事1"},
             {
@@ -326,7 +326,7 @@ def test_レスポンス(headers: dict | None, status_code: int, json_response: 
         ),
         pytest.param(
             {
-                "Authorization": f"Bearer {valid_jwt_token('6e2aa5a1-f792-47b8-9393-58fd657e7451')}"
+                "Authorization": f"Bearer {valid_access_token('6e2aa5a1-f792-47b8-9393-58fd657e7451')}"
             },
             {"q": "存在しない記事"},
             {

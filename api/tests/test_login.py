@@ -23,6 +23,7 @@ client = TestClient(app)
                 "id": "5e3868cd-3ec0-4f86-9a94-84363c64da29",
                 "username": "sh-okada",
                 "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1ZTM4NjhjZC0zZWMwLTRmODYtOWE5NC04NDM2M2M2NGRhMjkiLCJleHAiOjE3NTMyMzA2MDB9.cTPZJnsl44nXmY9dfDS7mOc1s11mjCenmdy14FH_wzg",
+                "refresh_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1ZTM4NjhjZC0zZWMwLTRmODYtOWE5NC04NDM2M2M2NGRhMjkiLCJleHAiOjE3NjEwMDQ4MDB9.SeDvySQ7qXWfTsuMOTQYCgzwMGAGg33ptDnRTxrC85c",
             },
             id="ユーザー名とパスワードの組み合わせが正しい場合、ログインできること",
         ),

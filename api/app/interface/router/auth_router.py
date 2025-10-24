@@ -1,21 +1,21 @@
 from fastapi import APIRouter, HTTPException, status
 from fastapi.encoders import jsonable_encoder
 from fastapi.responses import JSONResponse
+from jwt import ExpiredSignatureError, PyJWTError
 from sqlmodel import select
 
 from app.infrastructure.db import db_models
 from app.infrastructure.db.postgres import SessionDep
 from app.interface import requests, responses
-from app.shared import password
-from app.shared.jwt import create_access_token
+from app.shared import jwt, password
 
 router = APIRouter(prefix="/auth", tags=["auth"])
 
 
-@router.post("/login", response_model=responses.UserWithAccessToken)
+@router.post("/login", response_model=responses.UserWithToken)
 def login(
     form_data: requests.OAuth2PasswordRequest, session: SessionDep
-) -> responses.UserWithAccessToken:
+) -> responses.UserWithToken:
     statement = select(db_models.User).where(
         db_models.User.name == form_data.username,
     )
@@ -33,12 +33,14 @@ def login(
             detail="Incorrect username or password.",
         )
 
-    access_token = create_access_token(user.id)
+    access_token = jwt.create_access_token(user.id)
+    refresh_token = jwt.create_refresh_token(user.id)
 
-    return responses.UserWithAccessToken(
+    return responses.UserWithToken(
         id=user.id,
         username=user.name,
         access_token=access_token,
+        refresh_token=refresh_token,
     )
 
 
@@ -67,4 +69,38 @@ def signUp(form_data: requests.SignUp, session: SessionDep) -> JSONResponse:
         content=jsonable_encoder(
             responses.Message(detail="User created successfully.")
         ),
+    )
+
+
+@router.post("/tokens/refresh", response_model=responses.Tokens)
+def refresh_tokens(
+    form_data: requests.RefreshToken, session: SessionDep
+) -> responses.Tokens:
+    try:
+        token_data = jwt.decode_refresh_token(form_data.refresh_token)
+    except ExpiredSignatureError:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Refresh token has expired.",
+        )
+    except PyJWTError:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid refresh token.",
+        )
+
+    user = session.get(db_models.User, token_data.sub)
+
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="User not found.",
+        )
+
+    access_token = jwt.create_access_token(user.id)
+    refresh_token = jwt.create_refresh_token(user.id)
+
+    return responses.Tokens(
+        access_token=access_token,
+        refresh_token=refresh_token,
     )

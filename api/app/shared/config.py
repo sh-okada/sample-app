@@ -13,3 +13,6 @@ class JWT(BaseSettings):
     jwt_secret_key: str
     jwt_algorithm: str
     jwt_expire_minutes: int
+    refresh_jwt_secret_key: str
+    refresh_jwt_algorithm: str
+    refresh_jwt_expire_days: int
