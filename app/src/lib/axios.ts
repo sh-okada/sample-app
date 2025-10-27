@@ -1,6 +1,7 @@
 import axios from "axios";
 import applyCaseMiddleware from "axios-case-converter";
-import { auth, signOut } from "@/lib/auth";
+import { logout } from "@/app/(with-header)/action";
+import { getAccessToken } from "@/utils/cookie";
 
 export const axiosInstance = applyCaseMiddleware(
   axios.create({
@@ -13,9 +14,8 @@ export const axiosInstance = applyCaseMiddleware(
 );
 
 axiosInstance.interceptors.request.use(async (config) => {
-  const session = await auth();
-  session?.user &&
-    config.headers.setAuthorization(`Bearer ${session.user.accessToken}`);
+  const accessToken = await getAccessToken();
+  accessToken && config.headers.setAuthorization(`Bearer ${accessToken}`);
 
   return config;
 });
@@ -26,7 +26,7 @@ axiosInstance.interceptors.response.use(
   },
   async (error) => {
     if (isUnAuthorizedError(error)) {
-      await signOut();
+      await logout();
     }
     return Promise.reject(error);
   },

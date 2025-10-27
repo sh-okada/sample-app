@@ -4,6 +4,7 @@ import { login } from "@/api/auth";
 import { paths } from "@/config/paths";
 import { privateRoutes } from "@/config/routes";
 import { loginSchema } from "@/lib/zod/schema";
+import { setAccessToken } from "@/utils/cookie";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [
@@ -16,11 +17,11 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         const loginFormData = loginSchema.parse(credentials);
 
         const res = (await login(loginFormData)).data;
+        await setAccessToken(res.accessToken);
 
         return {
           id: res.id,
           name: res.username,
-          accessToken: res.accessToken,
         };
       },
     }),
@@ -43,7 +44,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       if (user) {
         token.sub = user.id;
         token.name = user.name;
-        token.accessToken = user.accessToken;
       }
 
       return token;
@@ -51,7 +51,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     session: async ({ session, token }) => {
       session.user.id = token.sub;
       session.user.name = token.name;
-      session.user.accessToken = token.accessToken;
 
       return session;
     },

@@ -1,16 +1,12 @@
+import { logout } from "@/app/(with-header)/action";
 import { Button } from "@/components/core/button";
-import { auth, signOut } from "@/lib/auth";
+import { auth } from "@/lib/auth";
 
 export const LogoutButton = async () => {
   const session = await auth();
 
   return session?.user ? (
-    <form
-      action={async () => {
-        "use server";
-        await signOut();
-      }}
-    >
+    <form action={logout}>
       <Button className="w-full" variant="solid" type="submit">
         ログアウト
       </Button>
