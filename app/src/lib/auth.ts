@@ -4,7 +4,7 @@ import { login } from "@/api/auth";
 import { paths } from "@/config/paths";
 import { privateRoutes } from "@/config/routes";
 import { loginSchema } from "@/lib/zod/schema";
-import { setAccessToken } from "@/utils/cookie";
+import { setAccessToken, setRefreshToken } from "@/utils/cookie";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [
@@ -18,6 +18,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
         const res = (await login(loginFormData)).data;
         await setAccessToken(res.accessToken);
+        await setRefreshToken(res.refreshToken);
 
         return {
           id: res.id,

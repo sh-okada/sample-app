@@ -8,6 +8,7 @@ test.beforeEach(async ({ mockServerRequest }) => {
       id: "c36feca1-ef32-46cc-9df4-3c0eeb698251",
       username: "sh-okada",
       access_token: "fake-access-token",
+      refresh_token: "fake-refresh-token",
     },
   });
   await mockServerRequest.GET("http://api:8000/api/articles", {

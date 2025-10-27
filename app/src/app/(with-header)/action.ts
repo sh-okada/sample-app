@@ -6,7 +6,7 @@ import { paths } from "@/config/paths";
 import { signOut } from "@/lib/auth";
 import { serializeArticlesParams } from "@/lib/nuqs/params";
 import { searchArticleSchema } from "@/lib/zod/schema";
-import { deleteAccessToken } from "@/utils/cookie";
+import { deleteAccessToken, deleteRefreshToken } from "@/utils/cookie";
 
 export async function searchArticle(_prevState: unknown, formData: FormData) {
   const submission = parseWithZod(formData, {
@@ -26,5 +26,6 @@ export async function searchArticle(_prevState: unknown, formData: FormData) {
 
 export async function logout() {
   await deleteAccessToken();
+  await deleteRefreshToken();
   await signOut();
 }

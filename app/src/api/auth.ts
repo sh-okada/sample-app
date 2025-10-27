@@ -6,6 +6,7 @@ export type LoginResponse = {
   id: string;
   username: string;
   accessToken: string;
+  refreshToken: string;
 };
 
 export type LoginRequest = z.infer<typeof loginSchema>;

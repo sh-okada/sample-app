@@ -1,24 +1,56 @@
 import dayjs from "dayjs";
 import { cookies } from "next/headers";
 
-export const setAccessToken = async (token: string) => {
+const setCookie = async (name: string, value: string, expires: Date) => {
   const cookieStore = await cookies();
   cookieStore.set({
-    name: "access_token",
-    value: token,
+    name: name,
+    value: value,
     path: "/",
-    expires: dayjs().add(1, "hour").toDate(),
+    expires: expires,
     httpOnly: true,
     sameSite: "lax",
   });
 };
 
-export const getAccessToken = async () => {
+const getCookie = async (name: string) => {
   const cookieStore = await cookies();
-  return cookieStore.get("access_token")?.value;
+  return cookieStore.get(name)?.value;
+};
+
+const deleteCookie = async (name: string) => {
+  const cookieStore = await cookies();
+  cookieStore.delete(name);
+};
+
+export const setAccessToken = async (accessToken: string) => {
+  await setCookie(
+    "access_token",
+    accessToken,
+    dayjs().add(1, "hours").toDate(),
+  );
+};
+
+export const setRefreshToken = async (refreshToken: string) => {
+  await setCookie(
+    "refresh_token",
+    refreshToken,
+    dayjs().add(3, "months").toDate(),
+  );
+};
+
+export const getAccessToken = async () => {
+  return await getCookie("access_token");
+};
+
+export const getRefreshToken = async () => {
+  return await getCookie("refresh_token");
 };
 
 export const deleteAccessToken = async () => {
-  const cookieStore = await cookies();
-  cookieStore.delete("access_token");
+  await deleteCookie("access_token");
+};
+
+export const deleteRefreshToken = async () => {
+  await deleteCookie("refresh_token");
 };
