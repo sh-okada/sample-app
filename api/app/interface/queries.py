@@ -9,8 +9,11 @@ from app.interface import requests, responses
 def get_articles_with_pagination(
     session: Session,
     article_filter_params: requests.ArticleFilterParams,
-    where_clauses: List[bool] = [],
+    where_clauses: List[bool] = None,
 ) -> responses.Articles:
+    if where_clauses is None:
+        where_clauses = []
+
     # 空文字検索はパフォーマンスを低下させる可能性があるため、キーワードが指定された場合のみフィルターにかける
     if article_filter_params.q:
         where_clauses.append(db_models.Article.title.contains(article_filter_params.q))
