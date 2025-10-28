@@ -21,7 +21,6 @@ export const axiosInstance = applyCaseMiddleware(
 
 axiosInstance.interceptors.request.use(async (config) => {
   const accessToken = await getAccessToken();
-  console.log("access token:", accessToken);
   accessToken && config.headers.setAuthorization(`Bearer ${accessToken}`);
 
   return config;
@@ -33,7 +32,6 @@ axiosInstance.interceptors.response.use(
   },
   async (error) => {
     if (isAccessTokenExpiredError(error)) {
-      console.log("refreshing access token...");
       const data =
         // biome-ignore lint/style/noNonNullAssertion: allowed undifined value
         (await refreshToken({ refreshToken: (await getRefreshToken())! })).data;
