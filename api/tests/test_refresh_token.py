@@ -24,7 +24,7 @@ client = TestClient(app)
             },
             200,
             {
-                "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1ZTM4NjhjZC0zZWMwLTRmODYtOWE5NC04NDM2M2M2NGRhMjkiLCJleHAiOjE3NTMyMzA2MDB9.cTPZJnsl44nXmY9dfDS7mOc1s11mjCenmdy14FH_wzg",
+                "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1ZTM4NjhjZC0zZWMwLTRmODYtOWE5NC04NDM2M2M2NGRhMjkiLCJleHAiOjE3NTMyMjk3MDB9.EX2iOXELnlMLgTsOk2CBz9fp8wQ8BHc9DiehrSLeO_w",
                 "refresh_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1ZTM4NjhjZC0zZWMwLTRmODYtOWE5NC04NDM2M2M2NGRhMjkiLCJleHAiOjE3NjEwMDQ4MDB9.SeDvySQ7qXWfTsuMOTQYCgzwMGAGg33ptDnRTxrC85c",
             },
             id="アクセストークンとリフレッシュトークンが新しく発行されること",

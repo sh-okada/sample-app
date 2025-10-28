@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 
 import jwt
 from pydantic import BaseModel
@@ -14,7 +14,7 @@ class TokenData(BaseModel):
 
 
 def create_access_token(id: pydantic_fields.UserId) -> str:
-    exp = datetime.now() + timedelta(minutes=jwt_config.jwt_expire_minutes)
+    exp = datetime.now(timezone.utc) + timedelta(minutes=jwt_config.jwt_expire_minutes)
 
     return jwt.encode(
         payload={"sub": str(id), "exp": exp},
@@ -24,7 +24,9 @@ def create_access_token(id: pydantic_fields.UserId) -> str:
 
 
 def create_refresh_token(id: pydantic_fields.UserId) -> str:
-    exp = datetime.now() + timedelta(days=jwt_config.refresh_jwt_expire_days)
+    exp = datetime.now(timezone.utc) + timedelta(
+        days=jwt_config.refresh_jwt_expire_days
+    )
 
     return jwt.encode(
         payload={"sub": str(id), "exp": exp},
