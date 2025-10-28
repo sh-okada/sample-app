@@ -22,3 +22,15 @@ export type SignUpRequest = z.infer<typeof signUpSchema>;
 
 export const signup = async (data: SignUpRequest) =>
   axiosInstance.post("/auth/signup", data);
+
+export type TokenResponse = {
+  accessToken: string;
+  refreshToken: string;
+};
+
+export type RefreshTokenRequest = {
+  refreshToken: string;
+};
+
+export const refreshToken = async (data: RefreshTokenRequest) =>
+  axiosInstance.post<TokenResponse>("/auth/tokens/refresh", data);
