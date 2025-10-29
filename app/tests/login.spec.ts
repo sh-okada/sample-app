@@ -1,23 +1,6 @@
-import { expect, type Page } from "@playwright/test";
+import { expect } from "@playwright/test";
 import { test } from "./fixtures";
-
-const getCookie = async (
-  page: Page,
-  name: string,
-  timeout = 5000,
-  interval = 100,
-) => {
-  const start = Date.now();
-  while (Date.now() - start < timeout) {
-    const cookies = await page.context().cookies();
-    const foundCookie = cookies.find((c) => c.name === name);
-    if (foundCookie) {
-      return foundCookie;
-    }
-    await new Promise((r) => setTimeout(r, interval));
-  }
-  return undefined;
-};
+import { getCookie } from "./helpers";
 
 test.describe("ユーザー名とパスワードが正しい場合", () => {
   test.beforeEach(async ({ page, mockServerRequest }) => {
