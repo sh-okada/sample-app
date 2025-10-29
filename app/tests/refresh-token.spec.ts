@@ -115,3 +115,64 @@ test.describe("アクセストークンの有効期限が切れた場合", () =>
     expect(refreshToken?.value).toBe("new-fake-refresh-token");
   });
 });
+
+test("リフレッシュトークンの有効期限が切れた場合、ログアウトされること", async ({
+  page,
+  mockServerRequest,
+}) => {
+  await mockServerRequest.POST(
+    {
+      url: "http://api:8000/api/auth/login",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+      body: "username=sh-okada&password=Password123",
+    },
+    {
+      status: 200,
+      body: {
+        id: "c36feca1-ef32-46cc-9df4-3c0eeb698251",
+        username: "sh-okada",
+        access_token: "fake-access-token",
+        refresh_token: "fake-refresh-token",
+      },
+    },
+  );
+  await mockServerRequest.POST(
+    {
+      url: "http://api:8000/api/articles",
+      headers: {
+        Authorization: "Bearer fake-access-token",
+      },
+      body: {
+        title: "title1",
+        text: "",
+      },
+    },
+    { status: 401, body: { detail: "Token has expired." } },
+  );
+  await mockServerRequest.POST(
+    {
+      url: "http://api:8000/api/auth/tokens/refresh",
+      body: {
+        refresh_token: "fake-refresh-token",
+      },
+    },
+    {
+      status: 401,
+      body: {
+        detail: "Refresh token has expired.",
+      },
+    },
+  );
+
+  await page.goto("/article/post");
+  await page.getByTestId("username-input").fill("sh-okada");
+  await page.getByTestId("password-input").fill("Password123");
+  await page.getByTestId("login-button").click();
+
+  await page.getByTestId("article-title-input").fill("title1");
+  await page.getByTestId("post-article-button").click();
+
+  await expect(page).toHaveURL("/login");
+});
