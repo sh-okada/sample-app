@@ -4,23 +4,35 @@ import { getCookie } from "./helpers";
 
 test.describe("ユーザー名とパスワードが正しい場合", () => {
   test.beforeEach(async ({ page, mockServerRequest }) => {
-    await mockServerRequest.POST("http://api:8000/api/auth/login", {
-      status: 200,
-      body: {
-        id: "c36feca1-ef32-46cc-9df4-3c0eeb698251",
-        username: "sh-okada",
-        access_token: "fake-access-token",
-        refresh_token: "fake-refresh-token",
+    await mockServerRequest.POST(
+      {
+        url: "http://api:8000/api/auth/login",
+        body: "username=sh-okada&password=Password123",
       },
-    });
-    await mockServerRequest.GET("http://api:8000/api/articles", {
-      status: 200,
-      body: {
-        values: [],
-        count: 0,
-        total_pages: 0,
+      {
+        status: 200,
+        body: {
+          id: "c36feca1-ef32-46cc-9df4-3c0eeb698251",
+          username: "sh-okada",
+          access_token: "fake-access-token",
+          refresh_token: "fake-refresh-token",
+        },
       },
-    });
+    );
+    await mockServerRequest.GET(
+      {
+        url: "http://api:8000/api/articles",
+        query: { page: 1, limit: 5, q: "" },
+      },
+      {
+        status: 200,
+        body: {
+          values: [],
+          count: 0,
+          total_pages: 0,
+        },
+      },
+    );
 
     await page.goto("/login");
     await page.getByTestId("username-input").fill("sh-okada");
