@@ -37,6 +37,7 @@ export const PostArticleForm = () => {
       <Field>
         <Field.Label htmlFor={fields.title.id}>タイトル</Field.Label>
         <Input
+          data-testid="article-title-input"
           placeholder="例）イケてるコードとは？"
           {...getInputProps(fields.title, { type: "text" })}
           key={fields.title.key}
@@ -45,9 +46,15 @@ export const PostArticleForm = () => {
       </Field>
       <Fieldset>
         <Fieldset.Legend>内容</Fieldset.Legend>
-        <MarkdownEditor doc={text.value} onChange={text.change} />
+        <MarkdownEditor
+          data-testid="article-text-input"
+          doc={text.value}
+          onChange={text.change}
+        />
       </Fieldset>
-      <Button type="submit">投稿</Button>
+      <Button data-testid="post-article-button" type="submit">
+        投稿
+      </Button>
     </form>
   );
 };
