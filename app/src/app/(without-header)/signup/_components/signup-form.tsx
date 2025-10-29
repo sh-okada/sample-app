@@ -45,7 +45,9 @@ export const SignUpForm = () => {
             {...getInputProps(fields.password, { type: "password" })}
             key={fields.password.key}
           />
-          <ErrorText>{fields.password.errors}</ErrorText>
+          <ErrorText data-testid="password-error-text">
+            {fields.password.errors}
+          </ErrorText>
         </Field>
         <Button data-testid="signup-button" type="submit">
           登録
