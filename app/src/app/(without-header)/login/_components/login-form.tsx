@@ -34,7 +34,9 @@ export const LoginForm = () => {
             {...getInputProps(fields.username, { type: "text" })}
             key={fields.username.key}
           />
-          <ErrorText>{fields.username.errors}</ErrorText>
+          <ErrorText data-testid="username-error-text">
+            {fields.username.errors}
+          </ErrorText>
         </Field>
         <Field>
           <Field.Label htmlFor={fields.password.id}>パスワード</Field.Label>
@@ -43,7 +45,9 @@ export const LoginForm = () => {
             {...getInputProps(fields.password, { type: "password" })}
             key={fields.password.key}
           />
-          <ErrorText>{fields.password.errors}</ErrorText>
+          <ErrorText data-testid="password-error-text">
+            {fields.password.errors}
+          </ErrorText>
         </Field>
         <Button data-testid="login-button" type="submit">
           ログイン
