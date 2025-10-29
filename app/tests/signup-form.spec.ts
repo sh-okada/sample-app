@@ -1,6 +1,18 @@
 import { expect } from "@playwright/test";
 import { test } from "./fixtures";
 
+test("ユーザー名が未入力の場合、エラーメッセージが表示されること", async ({
+  page,
+}) => {
+  await page.goto("/signup");
+  await page.getByTestId("username-input").fill("");
+  await page.getByTestId("username-input").blur();
+
+  await expect(page.getByTestId("username-error-text")).toHaveText(
+    "ユーザー名は必須項目です",
+  );
+});
+
 test("ユーザー名が1文字以下の場合、エラーメッセージが表示されること", async ({
   page,
 }) => {
