@@ -27,5 +27,7 @@ export async function searchArticle(_prevState: unknown, formData: FormData) {
 export async function logout() {
   await deleteAccessToken();
   await deleteRefreshToken();
-  await signOut();
+  await signOut({ redirect: false });
+
+  redirect(paths.login.getHref());
 }

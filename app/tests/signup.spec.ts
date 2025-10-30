@@ -26,7 +26,7 @@ test("使用されていないユーザー名の場合、ユーザー登録で�
   await page.getByTestId("password-input").fill("Password123");
   await page.getByTestId("signup-button").click();
 
-  await expect(page).toHaveURL("/login");
+  await expect(page.getByTestId("page-title")).toHaveText("ログイン");
 });
 
 test("使用されているユーザー名の場合、エラーメッセージが表示されること", async ({

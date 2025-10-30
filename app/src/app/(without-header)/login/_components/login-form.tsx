@@ -25,7 +25,7 @@ export const LoginForm = () => {
 
   return (
     <form {...getFormProps(form)} action={action}>
-      <ErrorText data-testid="error-text">{form.errors}</ErrorText>
+      <ErrorText data-testid="login-error-text">{form.errors}</ErrorText>
       <div className="flex flex-col gap-2">
         <Field>
           <Field.Label htmlFor={fields.username.id}>ユーザー名</Field.Label>

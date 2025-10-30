@@ -36,12 +36,12 @@ test.beforeEach(async ({ mockServerRequest }) => {
 test("callbackUrlクエリパラメータがある場合、callbackUrlにリダイレクトされること", async ({
   page,
 }) => {
-  await page.goto("/login?callbackUrl=/article/post");
+  await page.goto("/article/post");
   await page.getByTestId("username-input").fill("sh-okada");
   await page.getByTestId("password-input").fill("Password123");
   await page.getByTestId("login-button").click();
 
-  await expect(page).toHaveURL("/article/post");
+  await expect(page.getByTestId("page-title")).toHaveText("記事を書く");
 });
 
 test("callbackUrlクエリパラメータがない場合、トップページに遷移すること", async ({
@@ -52,5 +52,5 @@ test("callbackUrlクエリパラメータがない場合、トップページに
   await page.getByTestId("password-input").fill("Password123");
   await page.getByTestId("login-button").click();
 
-  await expect(page).toHaveURL("/");
+  await expect(page.getByTestId("page-title")).toHaveText("記事を見る");
 });

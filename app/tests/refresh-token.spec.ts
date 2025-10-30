@@ -1,6 +1,6 @@
 import { expect } from "@playwright/test";
 import { test } from "./fixtures";
-import { getCookie } from "./helpers";
+import { getCookie, waitForAddCookie, waitForDeleteCookie } from "./helpers";
 
 test.describe("アクセストークンの有効期限が切れた場合", () => {
   test.beforeEach(async ({ page, mockServerRequest }) => {
@@ -96,10 +96,11 @@ test.describe("アクセストークンの有効期限が切れた場合", () =>
     await page.getByTestId("article-title-input").fill("title1");
     await page.getByTestId("post-article-button").click();
 
-    await expect(page).toHaveURL("/");
+    await expect(page.getByTestId("page-title")).toHaveText("記事を見る");
   });
 
   test("新しいアクセストークンがCookieに保存されること", async ({ page }) => {
+    await waitForAddCookie(page, "access_token");
     const accessToken = await getCookie(page, "access_token");
 
     expect(accessToken).toBeDefined();
@@ -109,6 +110,7 @@ test.describe("アクセストークンの有効期限が切れた場合", () =>
   test("新しいリフレッシュトークンがCookieに保存されること", async ({
     page,
   }) => {
+    await waitForAddCookie(page, "refresh_token");
     const refreshToken = await getCookie(page, "refresh_token");
 
     expect(refreshToken).toBeDefined();
@@ -116,63 +118,85 @@ test.describe("アクセストークンの有効期限が切れた場合", () =>
   });
 });
 
-test("リフレッシュトークンの有効期限が切れた場合、ログアウトされること", async ({
-  page,
-  mockServerRequest,
-}) => {
-  await mockServerRequest.POST(
-    {
-      url: "http://api:8000/api/auth/login",
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
+test.describe("リフレッシュトークンの有効期限が切れた場合", () => {
+  test.beforeEach(async ({ page, mockServerRequest }) => {
+    await mockServerRequest.POST(
+      {
+        url: "http://api:8000/api/auth/login",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+        body: "username=sh-okada&password=Password123",
       },
-      body: "username=sh-okada&password=Password123",
-    },
-    {
-      status: 200,
-      body: {
-        id: "c36feca1-ef32-46cc-9df4-3c0eeb698251",
-        username: "sh-okada",
-        access_token: "fake-access-token",
-        refresh_token: "fake-refresh-token",
+      {
+        status: 200,
+        body: {
+          id: "c36feca1-ef32-46cc-9df4-3c0eeb698251",
+          username: "sh-okada",
+          access_token: "fake-access-token",
+          refresh_token: "fake-refresh-token",
+        },
       },
-    },
-  );
-  await mockServerRequest.POST(
-    {
-      url: "http://api:8000/api/articles",
-      headers: {
-        Authorization: "Bearer fake-access-token",
+    );
+    await mockServerRequest.POST(
+      {
+        url: "http://api:8000/api/articles",
+        headers: {
+          Authorization: "Bearer fake-access-token",
+        },
+        body: {
+          title: "title1",
+          text: "",
+        },
       },
-      body: {
-        title: "title1",
-        text: "",
+      { status: 401, body: { detail: "Token has expired." } },
+    );
+    await mockServerRequest.POST(
+      {
+        url: "http://api:8000/api/auth/tokens/refresh",
+        body: {
+          refresh_token: "fake-refresh-token",
+        },
       },
-    },
-    { status: 401, body: { detail: "Token has expired." } },
-  );
-  await mockServerRequest.POST(
-    {
-      url: "http://api:8000/api/auth/tokens/refresh",
-      body: {
-        refresh_token: "fake-refresh-token",
+      {
+        status: 401,
+        body: {
+          detail: "Refresh token has expired.",
+        },
       },
-    },
-    {
-      status: 401,
-      body: {
-        detail: "Refresh token has expired.",
-      },
-    },
-  );
+    );
 
-  await page.goto("/article/post");
-  await page.getByTestId("username-input").fill("sh-okada");
-  await page.getByTestId("password-input").fill("Password123");
-  await page.getByTestId("login-button").click();
+    await page.goto("/article/post");
+    await page.getByTestId("username-input").fill("sh-okada");
+    await page.getByTestId("password-input").fill("Password123");
+    await page.getByTestId("login-button").click();
 
-  await page.getByTestId("article-title-input").fill("title1");
-  await page.getByTestId("post-article-button").click();
+    await page.getByTestId("article-title-input").fill("title1");
+    await page.getByTestId("post-article-button").click();
+  });
 
-  await expect(page).toHaveURL("/login");
+  test("ログアウトされること", async ({ page }) => {
+    await expect(page.getByTestId("page-title")).toHaveText("ログイン");
+  });
+
+  test("アクセストークンがCookieから削除されること", async ({ page }) => {
+    await waitForDeleteCookie(page, "access_token");
+    const accessToken = await getCookie(page, "access_token");
+
+    expect(accessToken).toBeUndefined();
+  });
+
+  test("リフレッシュトークンがCookieから削除されること", async ({ page }) => {
+    await waitForDeleteCookie(page, "refresh_token");
+    const refreshToken = await getCookie(page, "refresh_token");
+
+    expect(refreshToken).toBeUndefined();
+  });
+
+  test("セッショントークンがCookieから削除されること", async ({ page }) => {
+    await waitForDeleteCookie(page, "session_token");
+    const sessionToken = await getCookie(page, "session_token");
+
+    expect(sessionToken).toBeUndefined();
+  });
 });

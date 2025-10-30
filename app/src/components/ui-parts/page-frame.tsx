@@ -3,7 +3,11 @@ import type { ComponentProps, FunctionComponent, ReactNode } from "react";
 type PageTitleProps = ComponentProps<"h1">;
 
 const PageTitle = ({ className = "", ...rest }: PageTitleProps) => (
-  <h1 className={`text-[45px] mb-8 ${className}`} {...rest} />
+  <h1
+    data-testid="page-title"
+    className={`text-[45px] mb-8 ${className}`}
+    {...rest}
+  />
 );
 
 type PageContentProps = {

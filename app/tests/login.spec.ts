@@ -1,6 +1,6 @@
 import { expect } from "@playwright/test";
 import { test } from "./fixtures";
-import { getCookie } from "./helpers";
+import { getCookie, waitForAddCookie } from "./helpers";
 
 test.describe("ユーザー名とパスワードが正しい場合", () => {
   test.beforeEach(async ({ page, mockServerRequest }) => {
@@ -41,22 +41,25 @@ test.describe("ユーザー名とパスワードが正しい場合", () => {
   });
 
   test("ログインできること", async ({ page }) => {
-    await expect(page).toHaveURL("/");
+    await expect(page.getByTestId("page-title")).toHaveText("記事を見る");
   });
 
   test("アクセストークンがCookieに保存されること", async ({ page }) => {
+    await waitForAddCookie(page, "access_token");
     const accessToken = await getCookie(page, "access_token");
 
     expect(accessToken).toBeDefined();
   });
 
   test("リフレッシュトークンがCookieに保存されること", async ({ page }) => {
+    await waitForAddCookie(page, "refresh_token");
     const refreshToken = await getCookie(page, "refresh_token");
 
     expect(refreshToken).toBeDefined();
   });
 
   test("セッショントークンがCookieに保存されること", async ({ page }) => {
+    await waitForAddCookie(page, "authjs.session-token");
     const sessionToken = await getCookie(page, "authjs.session-token");
 
     expect(sessionToken).toBeDefined();
@@ -78,4 +81,8 @@ test("ユーザー名またはパスワードが間違っている場合、エ�
   await page.getByTestId("username-input").fill("sh-okada");
   await page.getByTestId("password-input").fill("Password123");
   await page.getByTestId("login-button").click();
+
+  await expect(page.getByTestId("login-error-text")).toHaveText(
+    "ユーザー名またはパスワードが間違っています。",
+  );
 });
