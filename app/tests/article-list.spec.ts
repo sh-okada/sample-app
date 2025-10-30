@@ -149,8 +149,7 @@ test("1ページ目の場合、1~5件目の記事が表示される", async ({ p
 });
 
 test("2ページ目の場合、6~10件目の記事が表示される", async ({ page }) => {
-  await page.goto("/");
-  await page.getByTestId("next-page-button").click();
+  await page.goto("/?page=2");
 
   const articleTitles = await page
     .getByTestId("article-title")

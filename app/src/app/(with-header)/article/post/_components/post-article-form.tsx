@@ -42,7 +42,9 @@ export const PostArticleForm = () => {
           {...getInputProps(fields.title, { type: "text" })}
           key={fields.title.key}
         />
-        <ErrorText>{fields.title.errors}</ErrorText>
+        <ErrorText data-testid="article-title-error-text">
+          {fields.title.errors}
+        </ErrorText>
       </Field>
       <Fieldset>
         <Fieldset.Legend>内容</Fieldset.Legend>
