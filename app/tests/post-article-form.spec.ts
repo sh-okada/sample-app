@@ -1,10 +1,7 @@
 import { expect } from "@playwright/test";
 import { test } from "./fixtures";
 
-test("タイトルが未入力の場合、エラーメッセージが表示されること", async ({
-  page,
-  mockServerRequest,
-}) => {
+test.beforeEach(async ({ page, mockServerRequest }) => {
   await mockServerRequest.POST(
     {
       url: "http://api:8000/api/auth/login",
@@ -28,10 +25,29 @@ test("タイトルが未入力の場合、エラーメッセージが表示さ�
   await page.getByTestId("username-input").fill("sh-okada");
   await page.getByTestId("password-input").fill("Password123");
   await page.getByTestId("login-button").click();
+});
 
+test("タイトルが未入力の場合、エラーメッセージが表示されること", async ({
+  page,
+}) => {
   await page.getByTestId("post-article-button").click();
 
   await expect(page.getByTestId("article-title-error-text")).toHaveText(
     "タイトルは必須項目です",
+  );
+});
+
+test("タイトルが201文字以上の場合、エラーメッセージが表示されること", async ({
+  page,
+}) => {
+  await page
+    .getByTestId("article-title-input")
+    .fill(
+      "title1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456",
+    );
+  await page.getByTestId("post-article-button").click();
+
+  await expect(page.getByTestId("article-title-error-text")).toHaveText(
+    "タイトルは200文字以下で入力してください",
   );
 });
