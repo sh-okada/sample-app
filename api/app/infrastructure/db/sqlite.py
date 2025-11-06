@@ -8,11 +8,7 @@ engine = create_engine("sqlite:///./sqlite.db")
 
 def get_mock_session() -> Generator[Session, Any, None]:
     with Session(engine) as session:
-        try:
-            yield session
-        except:
-            session.rollback()
-            raise
+        yield session
 
 
 def create_mock_db_and_tables():

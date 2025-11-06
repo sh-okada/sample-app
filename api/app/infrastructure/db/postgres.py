@@ -14,11 +14,7 @@ engine = create_engine(
 
 def get_session() -> Generator[Session, Any, None]:
     with Session(engine) as session:
-        try:
-            yield session
-        except:
-            session.rollback()
-            raise
+        yield session
 
 
 def create_db_and_tables():
