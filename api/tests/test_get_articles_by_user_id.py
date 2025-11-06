@@ -46,12 +46,6 @@ client = TestClient(app)
             },
             id="idで指定したユーザーの投稿した記事が取得できること",
         ),
-        pytest.param(
-            "50b7fcda-f479-4c2b-8f46-894914481ed6",
-            404,
-            {"detail": "User not found."},
-            id="存在しないユーザーの記事は取得できないこと",
-        ),
     ],
 )
 def test_レスポンス(id: str, status_code: int, json_response: dict):

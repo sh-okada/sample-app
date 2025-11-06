@@ -3,11 +3,10 @@ from fastapi.encoders import jsonable_encoder
 from fastapi.responses import JSONResponse
 from pydantic import UUID4
 
-from app.domain.entity.article import Article
-from app.domain.repository.article_repository import ArticleRepositoryDep
 from app.infrastructure.db import db_models
 from app.infrastructure.db.postgres import SessionDep
 from app.interface import queries, requests, responses
+from app.interface.usecase_di import PostArticleUseCaseDep
 from app.shared.oauth2 import CurrentUserDep
 
 router = APIRouter(prefix="/articles", tags=["articles"])
@@ -45,15 +44,14 @@ def get_article(id: UUID4, session: SessionDep) -> responses.Article:
 @router.post("", response_model=responses.Message)
 def post_article(
     form_data: requests.PostArticle,
-    article_repository: ArticleRepositoryDep,
+    post_article_usecase: PostArticleUseCaseDep,
     current_user: CurrentUserDep,
 ) -> JSONResponse:
-    article = Article(
+    post_article_usecase.execute(
         title=form_data.title,
         text=form_data.text,
         user_id=current_user.id,
     )
-    article_repository.create(article)
 
     return JSONResponse(
         status_code=status.HTTP_201_CREATED,

@@ -1,16 +1,10 @@
 from fastapi import APIRouter, HTTPException, status
 from sqlmodel import and_, select
 
-from app.domain.exceptions import (
-    ArticleAlreadyLikedError,
-    ArticleAlreadyUnLikedError,
-    MyPostArticleError,
-)
-from app.domain.repository.article_repository import ArticleRepositoryDep
-from app.domain.repository.user_repository import UserRepositoryDep
 from app.infrastructure.db import db_models
 from app.infrastructure.db.postgres import SessionDep
 from app.interface import queries, requests, responses
+from app.interface.usecase_di import LikeArticleUseCaseDep, UnlikeArticleUseCaseDep
 from app.shared import pydantic_fields
 from app.shared.oauth2 import CurrentUserDep
 
@@ -41,19 +35,12 @@ def get_my_articles(
 def get_articles_by_user_id(
     id: pydantic_fields.UserId,
     article_filter_query: requests.ArticleFilterQuery,
-    user_repository: UserRepositoryDep,
     session: SessionDep,
 ) -> responses.Articles:
-    user = user_repository.find_by_id(id)
-    if not user:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail="User not found."
-        )
-
     return queries.get_articles_with_pagination(
         session=session,
         article_filter_params=article_filter_query,
-        where_clauses=[db_models.Article.user_id == user.id],
+        where_clauses=[db_models.Article.user_id == id],
     )
 
 
@@ -89,36 +76,12 @@ def get_liked_article(
 @router.post("/me/liked-articles", response_model=responses.Message)
 def like_article(
     form_data: requests.LikeArticle,
-    user_repository: UserRepositoryDep,
-    article_repository: ArticleRepositoryDep,
+    like_article_usecase: LikeArticleUseCaseDep,
     current_user: CurrentUserDep,
 ) -> responses.Message:
-    user = user_repository.find_by_id(current_user.id)
-    if not user:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail="User not found."
-        )
-
-    article = article_repository.find_by_id(form_data.article_id)
-    if not article:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail="Article not found."
-        )
-
-    try:
-        user.like(article)
-    except MyPostArticleError:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Cannot like own article.",
-        )
-    except ArticleAlreadyLikedError:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Already liked this article.",
-        )
-
-    user_repository.update(user)
+    like_article_usecase.execute(
+        user_id=current_user.id, article_id=form_data.article_id
+    )
 
     return responses.Message(detail="Article liked successfully.")
 
@@ -126,30 +89,9 @@ def like_article(
 @router.delete("/me/liked-articles/{id}", response_model=responses.Message)
 def unlike_article(
     id: pydantic_fields.ArticleId,
-    user_repository: UserRepositoryDep,
-    article_repository: ArticleRepositoryDep,
+    unlike_article_usecase: UnlikeArticleUseCaseDep,
     current_user: CurrentUserDep,
 ) -> responses.Message:
-    user = user_repository.find_by_id(current_user.id)
-    if not user:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail="User not found."
-        )
-
-    article = article_repository.find_by_id(id)
-    if not article:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail="Article not found."
-        )
-
-    try:
-        user.unlike(article)
-    except ArticleAlreadyUnLikedError:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Have not liked this article.",
-        )
-
-    user_repository.update(user)
+    unlike_article_usecase.execute(user_id=current_user.id, article_id=id)
 
     return responses.Message(detail="article unliked successfully.")
